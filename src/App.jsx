@@ -8,6 +8,7 @@ import Login from './pages/Login'
 import Register from './pages/Register'
 import Browse from './pages/Browse'
 import NotFound from './pages/NotFound'
+import ProtectedRoute from './components/ProtectedRoute'
 
 const router = createBrowserRouter([
   {
@@ -16,7 +17,7 @@ const router = createBrowserRouter([
     children: [
       { index: true, element: <Home /> },
       { path: 'post/:id', element: <PostDetail /> },
-      { path: 'create', element: <CreatePost /> },
+      { path: 'create', element: <ProtectedRoute><CreatePost /></ProtectedRoute> },
       { path: 'profile/:id', element: <Profile /> },
       { path: 'login', element: <Login /> },
       { path: 'register', element: <Register /> },
