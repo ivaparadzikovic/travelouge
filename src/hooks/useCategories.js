@@ -1,0 +1,34 @@
+import { useQuery } from '@tanstack/react-query'
+import { supabase } from '../lib/supabase'
+
+export function useCategories() {
+  return useQuery({
+    queryKey: ['categories'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('categories')
+        .select('*')
+        .order('name')
+
+      if (error) throw error
+      return data
+    },
+    staleTime: Infinity,
+  })
+}
+
+export function useCountries() {
+  return useQuery({
+    queryKey: ['countries'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('countries')
+        .select('*')
+        .order('name')
+
+      if (error) throw error
+      return data
+    },
+    staleTime: Infinity,
+  })
+}
