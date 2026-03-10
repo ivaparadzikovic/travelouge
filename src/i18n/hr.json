@@ -1,0 +1,37 @@
+{
+  "common": {
+    "appName": "Putna Platforma",
+    "home": "Početna",
+    "browse": "Pregledaj",
+    "create": "Kreiraj objavu",
+    "profile": "Profil",
+    "login": "Prijava",
+    "register": "Registracija",
+    "logout": "Odjava",
+    "search": "Pretraži",
+    "loading": "Učitavanje...",
+    "error": "Nešto je pošlo po krivu",
+    "save": "Spremi",
+    "cancel": "Odustani",
+    "delete": "Obriši",
+    "edit": "Uredi",
+    "submit": "Pošalji"
+  },
+  "post": {
+    "upvote": "Glasaj za",
+    "downvote": "Glasaj protiv",
+    "comments": "Komentari",
+    "share": "Podijeli",
+    "edited": "uređeno",
+    "noResults": "Nema pronađenih objava"
+  },
+  "auth": {
+    "email": "Email",
+    "password": "Lozinka",
+    "loginTitle": "Prijava",
+    "registerTitle": "Kreiraj račun",
+    "googleLogin": "Nastavi s Googleom",
+    "noAccount": "Nemaš račun?",
+    "hasAccount": "Već imaš račun?"
+  }
+}

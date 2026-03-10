@@ -1,0 +1,37 @@
+{
+  "common": {
+    "appName": "Travel Platform",
+    "home": "Home",
+    "browse": "Browse",
+    "create": "Create Post",
+    "profile": "Profile",
+    "login": "Log In",
+    "register": "Register",
+    "logout": "Log Out",
+    "search": "Search",
+    "loading": "Loading...",
+    "error": "Something went wrong",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "submit": "Submit"
+  },
+  "post": {
+    "upvote": "Upvote",
+    "downvote": "Downvote",
+    "comments": "Comments",
+    "share": "Share",
+    "edited": "edited",
+    "noResults": "No posts found"
+  },
+  "auth": {
+    "email": "Email",
+    "password": "Password",
+    "loginTitle": "Log In",
+    "registerTitle": "Create Account",
+    "googleLogin": "Continue with Google",
+    "noAccount": "Don't have an account?",
+    "hasAccount": "Already have an account?"
+  }
+}
