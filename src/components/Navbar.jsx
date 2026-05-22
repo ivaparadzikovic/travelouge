@@ -3,18 +3,16 @@ import { useTranslation } from 'react-i18next'
 import { useAuthStore } from '../stores/authStore'
 import { useTheme } from '../hooks/useTheme'
 import { useLogout } from '../hooks/useAuth'
-import { useUnreadCount } from '../hooks/useNotifications'
+import NotificationsDropdown from './NotificationsDropdown'
 
 export default function Navbar() {
   const { t, i18n } = useTranslation()
   const user = useAuthStore((state) => state.user)
   const { theme, setTheme } = useTheme()
   const logout = useLogout()
-  const { data: unreadCount } = useUnreadCount()
 
   const toggleTheme = () => {
-    const next = theme === 'dark' ? 'light' : theme === 'light' ? 'system' : 'dark'
-    setTheme(next)
+    setTheme(theme === 'dark' ? 'light' : 'dark')
   }
 
   const toggleLang = () => {
@@ -48,7 +46,7 @@ export default function Navbar() {
             onClick={toggleTheme}
             className="px-2 py-1 text-sm text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded"
           >
-            {theme === 'dark' ? '☀️' : theme === 'light' ? '🌙' : '💻'}
+            {theme === 'dark' ? '☀️' : '🌙'}
           </button>
 
           <button
@@ -60,11 +58,7 @@ export default function Navbar() {
 
           {user ? (
             <div className="flex items-center gap-3">
-              {unreadCount > 0 && (
-                <span className="bg-red-500 text-white text-xs px-2 py-0.5 rounded-full">
-                  {unreadCount}
-                </span>
-              )}
+              <NotificationsDropdown />
               <Link
                 to={`/profile/${user.id}`}
                 className="text-gray-600 dark:text-gray-300 hover:text-blue-600"
@@ -73,7 +67,7 @@ export default function Navbar() {
               </Link>
               <button
                 onClick={() => logout.mutate()}
-                className="text-sm text-red-500 hover:text-red-700"
+                className="text-red-500 hover:text-red-700"
               >
                 {t('common.logout')}
               </button>

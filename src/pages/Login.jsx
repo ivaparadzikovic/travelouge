@@ -19,20 +19,21 @@ export default function Login() {
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         <div>
-          <label className="block text-sm font-medium mb-1">{t('auth.email')}</label>
+          <label className="block text-sm font-medium mb-1">{t('auth.identifier')}</label>
           <input
-            type="email"
-            {...register('email', { required: 'Email is required' })}
+            type="text"
+            autoComplete="username"
+            {...register('identifier', { required: t('auth.identifierRequired') })}
             className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-800"
           />
-          {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>}
+          {errors.identifier && <p className="text-red-500 text-sm mt-1">{errors.identifier.message}</p>}
         </div>
 
         <div>
           <label className="block text-sm font-medium mb-1">{t('auth.password')}</label>
           <input
             type="password"
-            {...register('password', { required: 'Password is required', minLength: { value: 6, message: 'Min 6 characters' } })}
+            {...register('password', { required: t('auth.passwordRequired') })}
             className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-800"
           />
           {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password.message}</p>}

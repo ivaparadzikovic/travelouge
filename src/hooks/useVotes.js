@@ -1,6 +1,26 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import toast from 'react-hot-toast'
 import { supabase } from '../lib/supabase'
 import { useAuthStore } from '../stores/authStore'
+
+export function usePostVoters(postId, enabled = true) {
+  return useQuery({
+    queryKey: ['voters', postId],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('votes')
+        .select('value, created_at, profiles:user_id(id, username, display_name, avatar_url)')
+        .eq('post_id', postId)
+        .order('created_at', { ascending: false })
+      if (error) throw error
+      return {
+        upvoters: data.filter((v) => v.value === 1),
+        downvoters: data.filter((v) => v.value === -1),
+      }
+    },
+    enabled: !!postId && enabled,
+  })
+}
 
 export function useUserVote(postId) {
   const user = useAuthStore((state) => state.user)
@@ -70,6 +90,10 @@ export function useVote() {
       queryClient.invalidateQueries({ queryKey: ['vote', variables.postId] })
       queryClient.invalidateQueries({ queryKey: ['post', variables.postId] })
       queryClient.invalidateQueries({ queryKey: ['posts'] })
+      queryClient.invalidateQueries({ queryKey: ['voters', variables.postId] })
+    },
+    onError: (error) => {
+      toast.error(error.message)
     },
   })
 }

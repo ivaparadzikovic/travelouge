@@ -32,3 +32,15 @@ export function useCountries() {
     staleTime: Infinity,
   })
 }
+
+export function usePopularDestinations(limit = 5) {
+  return useQuery({
+    queryKey: ['popular-destinations', limit],
+    queryFn: async () => {
+      const { data, error } = await supabase.rpc('popular_destinations', { p_limit: limit })
+      if (error) throw error
+      return data
+    },
+    staleTime: 5 * 60 * 1000,
+  })
+}

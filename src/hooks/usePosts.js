@@ -5,20 +5,27 @@ import toast from 'react-hot-toast'
 const POSTS_PER_PAGE = 10
 
 export function usePosts(sort = 'newest') {
-  const orderColumn = sort === 'popular' ? 'vote_count' : sort === 'top' ? 'vote_count' : 'created_at'
-  const ascending = false
-
   return useInfiniteQuery({
     queryKey: ['posts', sort],
     queryFn: async ({ pageParam = 0 }) => {
       const from = pageParam * POSTS_PER_PAGE
       const to = from + POSTS_PER_PAGE - 1
 
-      const { data, error } = await supabase
+      let query = supabase
         .from('posts')
         .select('*, profiles:author_id(username, display_name, avatar_url), countries(name, code), categories(name, slug)')
-        .order(orderColumn, { ascending })
-        .range(from, to)
+
+      if (sort === 'popular') {
+        query = query.order('view_count', { ascending: false })
+      } else if (sort === 'top') {
+        query = query
+          .order('vote_ratio', { ascending: false })
+          .order('upvote_count', { ascending: false })
+      } else {
+        query = query.order('created_at', { ascending: false })
+      }
+
+      const { data, error } = await query.range(from, to)
 
       if (error) throw error
       return data
@@ -57,7 +64,7 @@ export function useUserPosts(userId) {
         .order('created_at', { ascending: false })
 
       if (error) throw error
-      return data
+      return data;
     },
     enabled: !!userId,
   })

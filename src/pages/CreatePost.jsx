@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
@@ -12,14 +12,33 @@ const MAX_IMAGE_BYTES = 5 * 1024 * 1024
 const ALLOWED_IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/webp']
 
 export default function CreatePost() {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
   const navigate = useNavigate()
   const user = useAuthStore((state) => state.user)
   const { data: countries, isLoading: countriesLoading } = useCountries()
   const { data: categories, isLoading: categoriesLoading } = useCategories()
   const createPost = useCreatePost()
   const [uploading, setUploading] = useState(false)
-  const { register, handleSubmit, formState: { errors } } = useForm()
+  const [imageName, setImageName] = useState('')
+  const fileInputRef = useRef(null)
+  const { register, handleSubmit, resetField, formState: { errors } } = useForm()
+  const imageRegister = register('image', {
+    validate: (fileList) => {
+      const f = fileList?.[0]
+      if (!f) return true
+      if (!ALLOWED_IMAGE_TYPES.includes(f.type)) return t('post.imageInvalidType')
+      if (f.size > MAX_IMAGE_BYTES) return t('post.imageTooLarge')
+      return true
+    },
+  })
+
+  const collator = new Intl.Collator(i18n.language)
+  const localizedCountries = countries
+    ?.map((c) => ({ id: c.id, label: t(`countries.${c.code}`, { defaultValue: c.name }) }))
+    .sort((a, b) => collator.compare(a.label, b.label))
+  const localizedCategories = categories
+    ?.map((c) => ({ id: c.id, label: t(`categories.${c.slug}`, { defaultValue: c.name }) }))
+    .sort((a, b) => collator.compare(a.label, b.label))
 
   const onSubmit = async (data) => {
     let image_url = null
@@ -109,8 +128,8 @@ export default function CreatePost() {
               className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-800"
             >
               <option value="" disabled>{t('post.selectCountry')}</option>
-              {countries?.map((c) => (
-                <option key={c.id} value={c.id}>{c.name}</option>
+              {localizedCountries?.map((c) => (
+                <option key={c.id} value={c.id}>{c.label}</option>
               ))}
             </select>
             {errors.country_id && <p className="text-red-500 text-sm mt-1">{errors.country_id.message}</p>}
@@ -128,8 +147,8 @@ export default function CreatePost() {
               className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-800"
             >
               <option value="" disabled>{t('post.selectCategory')}</option>
-              {categories?.map((c) => (
-                <option key={c.id} value={c.id}>{c.name}</option>
+              {localizedCategories?.map((c) => (
+                <option key={c.id} value={c.id}>{c.label}</option>
               ))}
             </select>
             {errors.category_id && <p className="text-red-500 text-sm mt-1">{errors.category_id.message}</p>}
@@ -141,17 +160,41 @@ export default function CreatePost() {
           <input
             type="file"
             accept={ALLOWED_IMAGE_TYPES.join(',')}
-            {...register('image', {
-              validate: (fileList) => {
-                const f = fileList?.[0]
-                if (!f) return true
-                if (!ALLOWED_IMAGE_TYPES.includes(f.type)) return t('post.imageInvalidType')
-                if (f.size > MAX_IMAGE_BYTES) return t('post.imageTooLarge')
-                return true
-              },
-            })}
-            className="w-full text-sm"
+            {...imageRegister}
+            ref={(el) => {
+              imageRegister.ref(el)
+              fileInputRef.current = el
+            }}
+            onChange={(e) => {
+              imageRegister.onChange(e)
+              setImageName(e.target.files?.[0]?.name ?? '')
+            }}
+            className="sr-only"
           />
+          <div className="flex items-center gap-3 flex-wrap">
+            <button
+              type="button"
+              onClick={() => fileInputRef.current?.click()}
+              className="px-3 py-1.5 text-sm border border-gray-300 dark:border-gray-600 rounded hover:bg-gray-50 dark:hover:bg-gray-800"
+            >
+              {t('post.chooseImage')}
+            </button>
+            <span className="text-sm text-gray-500 truncate">
+              {imageName || t('post.noImageChosen')}
+            </span>
+            {imageName && (
+              <button
+                type="button"
+                onClick={() => {
+                  resetField('image')
+                  setImageName('')
+                }}
+                className="text-sm text-red-600 hover:underline"
+              >
+                {t('post.removeImage')}
+              </button>
+            )}
+          </div>
           {errors.image && <p className="text-red-500 text-sm mt-1">{errors.image.message}</p>}
         </div>
 
