@@ -21,53 +21,56 @@ export default function VoteControls({ postId, authorId, upvoteCount, downvoteCo
     vote.mutate({ postId, value })
   }
 
-  const baseBtn =
-    'inline-flex items-center gap-1 px-2 py-1 rounded border text-sm font-medium tabular-nums transition-colors disabled:opacity-50 disabled:cursor-not-allowed'
+  const btn =
+    'inline-flex items-center gap-1 px-3 py-1.5 text-sm font-medium tabular-nums transition-colors disabled:opacity-50 disabled:cursor-not-allowed'
   const upClass =
     current === 1
-      ? 'bg-green-600 text-white border-green-600 hover:bg-green-700'
-      : 'text-green-700 dark:text-green-400 border-green-300 dark:border-green-700 hover:bg-green-50 dark:hover:bg-green-900/30'
+      ? 'bg-up text-white'
+      : 'text-up hover:bg-up/10'
   const downClass =
     current === -1
-      ? 'bg-red-600 text-white border-red-600 hover:bg-red-700'
-      : 'text-red-700 dark:text-red-400 border-red-300 dark:border-red-700 hover:bg-red-50 dark:hover:bg-red-900/30'
+      ? 'bg-down text-white'
+      : 'text-down hover:bg-down/10'
 
   return (
     <div
-      className="inline-flex items-center gap-2 flex-wrap"
+      className="inline-flex items-center gap-3 flex-wrap"
       title={!user ? t('vote.signInToVote') : isAuthor ? t('vote.cannotVoteOwnPost') : undefined}
     >
-      <button
-        type="button"
-        onClick={() => cast(1)}
-        disabled={disabled}
-        aria-label={t('vote.upvote')}
-        aria-pressed={current === 1}
-        className={`${baseBtn} ${upClass}`}
-      >
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-          <path d="M12 4l8 10h-5v6h-6v-6H4z" />
-        </svg>
-        <span>{upvoteCount}</span>
-      </button>
-      <button
-        type="button"
-        onClick={() => cast(-1)}
-        disabled={disabled}
-        aria-label={t('vote.downvote')}
-        aria-pressed={current === -1}
-        className={`${baseBtn} ${downClass}`}
-      >
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-          <path d="M12 20l-8-10h5V4h6v6h5z" />
-        </svg>
-        <span>{downvoteCount}</span>
-      </button>
+      <div className="inline-flex items-center overflow-hidden rounded-full border border-border bg-surface">
+        <button
+          type="button"
+          onClick={() => cast(1)}
+          disabled={disabled}
+          aria-label={t('vote.upvote')}
+          aria-pressed={current === 1}
+          className={`${btn} ${upClass}`}
+        >
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M12 4l8 10h-5v6h-6v-6H4z" />
+          </svg>
+          <span>{upvoteCount}</span>
+        </button>
+        <span className="h-4 w-px bg-border" aria-hidden="true" />
+        <button
+          type="button"
+          onClick={() => cast(-1)}
+          disabled={disabled}
+          aria-label={t('vote.downvote')}
+          aria-pressed={current === -1}
+          className={`${btn} ${downClass}`}
+        >
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M12 20l-8-10h5V4h6v6h5z" />
+          </svg>
+          <span>{downvoteCount}</span>
+        </button>
+      </div>
       {hasVotes && (
         <button
           type="button"
           onClick={() => setShowVoters(true)}
-          className="text-sm text-teal-600 hover:underline"
+          className="text-sm text-accent hover:underline"
         >
           {t('vote.seeVoters')}
         </button>

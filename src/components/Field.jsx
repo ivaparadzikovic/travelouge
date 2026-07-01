@@ -13,13 +13,13 @@ export default function Field({ label, error, children, className = '' }) {
   return (
     <div className={className}>
       {label && (
-        <label htmlFor={labelFor} className="block text-sm font-medium mb-1">
+        <label htmlFor={labelFor} className="mb-1.5 block text-sm font-medium text-ink">
           {label}
         </label>
       )}
       {enhanced}
       {error && (
-        <p id={errorId} className="text-red-500 text-sm mt-1">
+        <p id={errorId} className="mt-1 text-sm text-down">
           {error}
         </p>
       )}

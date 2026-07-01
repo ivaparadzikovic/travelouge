@@ -25,11 +25,11 @@ export default function Home() {
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold">{t('common.home')}</h1>
+        <h1 className="font-display text-2xl font-bold tracking-tight">{t('common.home')}</h1>
         {user && (
           <Link
             to="/create"
-            className="px-4 py-2 bg-teal-600 text-white rounded hover:bg-teal-700"
+            className="rounded-lg bg-accent px-4 py-2 text-sm font-semibold text-white hover:bg-accent-hover transition-colors"
           >
             {t('common.create')}
           </Link>
@@ -38,15 +38,15 @@ export default function Home() {
 
       <PopularDestinations />
 
-      <div className="flex gap-4 mb-6 border-b border-gray-200 dark:border-gray-700">
+      <div className="flex gap-5 mb-4 border-b border-border">
         {SORTS.map((s) => (
           <button
             key={s.key}
             onClick={() => setSort(s.key)}
             className={
               s.key === sort
-                ? 'pb-2 border-b-2 border-teal-600 text-teal-600 font-medium'
-                : 'pb-2 text-gray-500 hover:text-gray-700'
+                ? 'pb-2.5 border-b-2 border-accent text-accent text-sm font-semibold'
+                : 'pb-2.5 border-b-2 border-transparent text-sm text-muted hover:text-ink transition-colors'
             }
           >
             {t(s.labelKey)}
@@ -54,12 +54,12 @@ export default function Home() {
         ))}
       </div>
 
-      {isError && <p className="text-red-500">{error.message}</p>}
+      {isError && <p className="text-down">{error.message}</p>}
       {!isLoading && !isError && posts.length === 0 && (
-        <p className="text-gray-500">{t('post.noResults')}</p>
+        <p className="text-muted">{t('post.noResults')}</p>
       )}
 
-      <ul className="space-y-3">
+      <ul className="space-y-2.5">
         {isLoading
           ? Array.from({ length: 4 }).map((_, i) => <PostCardSkeleton key={i} />)
           : posts.map((post) => <PostCard key={post.id} post={post} />)}
@@ -70,7 +70,7 @@ export default function Home() {
           <button
             onClick={() => fetchNextPage()}
             disabled={isFetchingNextPage}
-            className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded hover:bg-gray-50 dark:hover:bg-gray-800 disabled:opacity-50"
+            className="rounded-lg border border-border px-4 py-2 text-sm hover:bg-surface-2 disabled:opacity-50 transition-colors"
           >
             {isFetchingNextPage ? t('common.loading') : t('home.loadMore')}
           </button>

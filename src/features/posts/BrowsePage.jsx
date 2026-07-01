@@ -67,17 +67,17 @@ export default function Browse() {
     ?.map((c) => ({ id: c.id, label: t(`categories.${c.slug}`, { defaultValue: c.name }) }))
     .sort((a, b) => collator.compare(a.label, b.label))
 
-  const inputClass = 'w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-800'
+  const inputClass = 'w-full rounded-lg border border-border bg-surface px-3 py-2 text-ink placeholder:text-muted focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/30'
 
   return (
     <div>
-      <h1 className="text-2xl font-bold mb-6">{t('common.browse')}</h1>
+      <h1 className="font-display text-2xl font-bold tracking-tight mb-6">{t('common.browse')}</h1>
 
       <form onSubmit={onSearchSubmit} role="search" className="mb-4">
         <div className="relative">
           <svg
             viewBox="0 0 24 24"
-            className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400"
+            className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted"
             fill="none"
             stroke="currentColor"
             strokeWidth="2"
@@ -92,7 +92,7 @@ export default function Browse() {
             onChange={(e) => setQueryInput(e.target.value)}
             placeholder={t('common.search')}
             aria-label={t('common.search')}
-            className="w-full pl-9 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-teal-500"
+            className="w-full rounded-lg border border-border bg-surface pl-9 pr-3 py-2 text-ink placeholder:text-muted focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/30"
           />
         </div>
       </form>
@@ -124,12 +124,12 @@ export default function Browse() {
         </Field>
       </div>
 
-      {isError && <p className="text-red-500">{error.message}</p>}
+      {isError && <p className="text-down">{error.message}</p>}
       {!isLoading && !isError && posts?.length === 0 && (
-        <p className="text-gray-500">{t('post.noResults')}</p>
+        <p className="text-muted">{t('post.noResults')}</p>
       )}
 
-      <ul className="space-y-3">
+      <ul className="space-y-2.5">
         {isLoading
           ? Array.from({ length: 4 }).map((_, i) => <PostCardSkeleton key={i} />)
           : posts?.map((post) => <PostCard key={post.id} post={post} />)}

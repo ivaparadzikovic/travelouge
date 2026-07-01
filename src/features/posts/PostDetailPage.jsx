@@ -53,8 +53,8 @@ export default function PostDetail() {
     })
   }, [id, queryClient])
 
-  if (isLoading) return <div className="text-gray-500">{t('common.loading')}</div>
-  if (isError) return <div className="text-red-500">{error.message}</div>
+  if (isLoading) return <div className="text-muted">{t('common.loading')}</div>
+  if (isError) return <div className="text-down">{error.message}</div>
   if (!post) return <div>{t('post.noResults')}</div>
 
   const createdAt = new Date(post.created_at).toLocaleString(i18n.language)
@@ -171,7 +171,7 @@ export default function PostDetail() {
                 minLength: { value: 5, message: t('post.titleTooShort') },
                 maxLength: { value: 200, message: t('post.titleTooLong') },
               })}
-              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-800"
+              className="w-full rounded-lg border border-border bg-surface px-3 py-2 text-ink placeholder:text-muted focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/30"
             />
           </Field>
           <Field label={t('post.bodyLabel')} error={errors.body?.message}>
@@ -182,7 +182,7 @@ export default function PostDetail() {
                 minLength: { value: 10, message: t('post.bodyTooShort') },
                 maxLength: { value: 10000, message: t('post.bodyTooLong') },
               })}
-              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-800"
+              className="w-full rounded-lg border border-border bg-surface px-3 py-2 text-ink placeholder:text-muted focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/30"
             />
           </Field>
 
@@ -201,33 +201,33 @@ export default function PostDetail() {
                 <img
                   src={previewUrl}
                   alt=""
-                  className="max-h-64 rounded border border-gray-200 dark:border-gray-700 object-cover"
+                  className="max-h-64 rounded-xl border border-border object-cover"
                 />
                 <div className="flex items-center gap-3 flex-wrap text-sm">
                   <button
                     type="button"
                     onClick={() => fileInputRef.current?.click()}
-                    className="px-3 py-1.5 border border-gray-300 dark:border-gray-600 rounded hover:bg-gray-50 dark:hover:bg-gray-800"
+                    className="rounded-lg border border-border px-4 py-2 text-sm hover:bg-surface-2 transition-colors disabled:opacity-50"
                   >
                     {t('post.chooseImage')}
                   </button>
                   <button
                     type="button"
                     onClick={() => setImageFile(null)}
-                    className="text-gray-600 dark:text-gray-300 hover:underline"
+                    className="text-sm text-accent hover:underline"
                   >
                     {t('common.cancel')}
                   </button>
-                  <span className="text-gray-500 truncate">{imageFile.name}</span>
+                  <span className="truncate text-muted">{imageFile.name}</span>
                 </div>
               </div>
             ) : removeImage ? (
               <div className="flex items-center gap-3 text-sm">
-                <span className="italic text-gray-500">{t('post.imageWillBeRemoved')}</span>
+                <span className="italic text-muted">{t('post.imageWillBeRemoved')}</span>
                 <button
                   type="button"
                   onClick={() => setRemoveImage(false)}
-                  className="text-teal-600 hover:underline"
+                  className="text-sm text-accent hover:underline"
                 >
                   {t('post.undo')}
                 </button>
@@ -237,20 +237,20 @@ export default function PostDetail() {
                 <img
                   src={post.image_url}
                   alt=""
-                  className="max-h-64 rounded border border-gray-200 dark:border-gray-700 object-cover"
+                  className="max-h-64 rounded-xl border border-border object-cover"
                 />
                 <div className="flex items-center gap-3 flex-wrap text-sm">
                   <button
                     type="button"
                     onClick={() => fileInputRef.current?.click()}
-                    className="px-3 py-1.5 border border-gray-300 dark:border-gray-600 rounded hover:bg-gray-50 dark:hover:bg-gray-800"
+                    className="rounded-lg border border-border px-4 py-2 text-sm hover:bg-surface-2 transition-colors disabled:opacity-50"
                   >
                     {t('post.replaceImage')}
                   </button>
                   <button
                     type="button"
                     onClick={() => setRemoveImage(true)}
-                    className="text-red-600 hover:underline"
+                    className="text-sm text-down hover:underline"
                   >
                     {t('post.removeImage')}
                   </button>
@@ -260,7 +260,7 @@ export default function PostDetail() {
               <button
                 type="button"
                 onClick={() => fileInputRef.current?.click()}
-                className="px-3 py-1.5 text-sm border border-gray-300 dark:border-gray-600 rounded hover:bg-gray-50 dark:hover:bg-gray-800"
+                className="rounded-lg border border-border px-4 py-2 text-sm hover:bg-surface-2 transition-colors disabled:opacity-50"
               >
                 {t('post.addImage')}
               </button>
@@ -272,14 +272,14 @@ export default function PostDetail() {
               type="button"
               onClick={cancelEdit}
               disabled={submitting}
-              className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50"
+              className="rounded-lg border border-border px-4 py-2 text-sm hover:bg-surface-2 transition-colors disabled:opacity-50"
             >
               {t('common.cancel')}
             </button>
             <button
               type="submit"
               disabled={submitting}
-              className="px-4 py-2 bg-teal-600 text-white rounded hover:bg-teal-700 disabled:opacity-50"
+              className="rounded-lg bg-accent px-4 py-2 text-sm font-semibold text-white hover:bg-accent-hover transition-colors disabled:opacity-50"
             >
               {uploading ? t('post.uploading') : submitting ? t('common.loading') : t('common.save')}
             </button>

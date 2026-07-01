@@ -12,7 +12,7 @@ export default function RootLayout() {
   const needsUsername = profile && PLACEHOLDER_USERNAME.test(profile.username)
 
   return (
-    <div className="min-h-screen bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100">
+    <div className="min-h-screen bg-bg text-ink">
       <Navbar />
       <main className="container mx-auto px-4 py-8">
         <Outlet />

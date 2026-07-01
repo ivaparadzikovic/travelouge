@@ -16,7 +16,7 @@ import {
   ALLOWED_IMAGE_TYPES,
 } from './form/postFormSchema'
 
-const inputClass = 'w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-800'
+const inputClass = 'w-full rounded-lg border border-border bg-surface px-3 py-2 text-ink placeholder:text-muted focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/30'
 
 export default function CreatePost() {
   const { t, i18n } = useTranslation()
@@ -86,7 +86,7 @@ export default function CreatePost() {
 
   return (
     <div className="max-w-2xl mx-auto mt-10">
-      <h1 className="text-2xl font-bold mb-6">{t('post.createTitle')}</h1>
+      <h1 className="font-display text-2xl font-bold tracking-tight mb-6">{t('post.createTitle')}</h1>
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         <Field label={t('post.titleLabel')} error={errors.title?.message}>
@@ -147,11 +147,11 @@ export default function CreatePost() {
           <button
             type="button"
             onClick={() => fileInputRef.current?.click()}
-            className="px-3 py-1.5 text-sm border border-gray-300 dark:border-gray-600 rounded hover:bg-gray-50 dark:hover:bg-gray-800"
+            className="rounded-lg border border-border px-3 py-1.5 text-sm hover:bg-surface-2 transition-colors"
           >
             {t('post.chooseImage')}
           </button>
-          <span className="text-sm text-gray-500 truncate">
+          <span className="text-sm text-muted truncate">
             {imageName || t('post.noImageChosen')}
           </span>
           {imageName && (
@@ -161,7 +161,7 @@ export default function CreatePost() {
                 resetField('image')
                 setImageName('')
               }}
-              className="text-sm text-red-600 hover:underline"
+              className="text-sm text-down hover:underline"
             >
               {t('post.removeImage')}
             </button>
@@ -171,7 +171,7 @@ export default function CreatePost() {
         <button
           type="submit"
           disabled={submitting}
-          className="w-full py-2 bg-teal-600 text-white rounded hover:bg-teal-700 disabled:opacity-50"
+          className="w-full rounded-lg bg-accent px-4 py-2 text-sm font-semibold text-white hover:bg-accent-hover transition-colors disabled:opacity-50"
         >
           {uploading ? t('post.uploading') : submitting ? t('common.loading') : t('post.submitLabel')}
         </button>

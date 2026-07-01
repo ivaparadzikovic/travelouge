@@ -8,7 +8,7 @@ import { useDocumentTitle } from '../../utils/useDocumentTitle'
 import Field from '../../components/Field'
 import { loginFormSchema } from './form/loginFormSchema'
 
-const inputClass = 'w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-800'
+const inputClass = 'w-full rounded-lg border border-border bg-surface px-3 py-2 text-ink placeholder:text-muted focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/30'
 
 export default function Login() {
   const { t } = useTranslation()

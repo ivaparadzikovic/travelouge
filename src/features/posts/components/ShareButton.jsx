@@ -136,7 +136,7 @@ export default function ShareButton({ url, shareUrl, title }) {
         onClick={() => setOpen((v) => !v)}
         aria-haspopup="menu"
         aria-expanded={open}
-        className="inline-flex items-center gap-1 hover:text-teal-600 dark:hover:text-teal-400"
+        className="inline-flex items-center gap-1 text-sm text-muted hover:text-ink transition-colors"
       >
         <svg viewBox="0 0 24 24" className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true">
           <path strokeLinecap="round" strokeLinejoin="round" d="M7.217 10.907a2.25 2.25 0 1 0 0 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186 9.566-5.314m-9.566 7.5 9.566 5.314m0 0a2.25 2.25 0 1 0 3.935 2.186 2.25 2.25 0 0 0-3.935-2.186Zm0-12.814a2.25 2.25 0 1 0 3.933-2.185 2.25 2.25 0 0 0-3.933 2.185Z" />
@@ -146,7 +146,7 @@ export default function ShareButton({ url, shareUrl, title }) {
       {open && (
         <div
           role="menu"
-          className="absolute left-0 mt-2 w-56 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded shadow-lg z-50 py-1"
+          className="absolute left-0 z-50 mt-2 w-56 rounded-xl border border-border bg-surface py-1 shadow-xl"
         >
           {networks.map((n) => (
             <button
@@ -164,7 +164,7 @@ export default function ShareButton({ url, shareUrl, title }) {
             type="button"
             role="menuitem"
             onClick={handleCopy}
-            className="w-full flex items-center gap-3 px-3 py-2 text-sm text-left text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+            className="flex w-full items-center gap-3 px-3 py-2 text-left text-sm text-ink hover:bg-surface-2 transition-colors"
           >
             <LinkIcon />
             <span>{t('post.copyLink')}</span>
@@ -174,7 +174,7 @@ export default function ShareButton({ url, shareUrl, title }) {
               type="button"
               role="menuitem"
               onClick={handleNativeShare}
-              className="w-full flex items-center gap-3 px-3 py-2 text-sm text-left text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+              className="flex w-full items-center gap-3 px-3 py-2 text-left text-sm text-ink hover:bg-surface-2 transition-colors"
             >
               <MoreIcon />
               <span>{t('post.moreOptions')}</span>

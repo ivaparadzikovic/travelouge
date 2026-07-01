@@ -1,3 +1,68 @@
 @import "tailwindcss";
 
 @custom-variant dark (&:where(.dark, .dark *));
+
+/* ── Design system: "Clean & Techy" ──────────────────────────────
+   Indigo accent, Space Grotesk / IBM Plex Sans / IBM Plex Mono,
+   boxed surfaces, subtle hover-lift. Tokens are CSS variables that
+   flip under `.dark`; `@theme inline` exposes them as Tailwind
+   utilities (bg-surface, text-ink, text-accent, border-border, …)
+   so components no longer need paired `dark:` classes.            */
+
+@theme inline {
+  --font-sans: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, monospace;
+
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-border: var(--border);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+  --color-accent-soft: var(--accent-soft);
+  --color-up: var(--up);
+  --color-down: var(--down);
+}
+
+:root {
+  color-scheme: light;
+  --bg: #fbfbfd;
+  --surface: #ffffff;
+  --surface-2: #f2f4f8;
+  --border: #e6e9f0;
+  --ink: #151821;
+  --muted: #6a7183;
+  --accent: #4f5bf0;
+  --accent-hover: #3f49d8;
+  --accent-soft: #edeefe;
+  --up: #2e9e6b;
+  --down: #d15b52;
+}
+
+.dark {
+  color-scheme: dark;
+  --bg: #0e0f14;
+  --surface: #171a23;
+  --surface-2: #1e2230;
+  --border: #282d3b;
+  --ink: #eef0f6;
+  --muted: #8a90a2;
+  --accent: #8a93ff;
+  --accent-hover: #a5abff;
+  --accent-soft: #20263c;
+  --up: #5fd39a;
+  --down: #e58379;
+}
+
+@layer base {
+  body {
+    background-color: var(--bg);
+    color: var(--ink);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+}

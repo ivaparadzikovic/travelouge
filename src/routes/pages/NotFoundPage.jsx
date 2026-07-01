@@ -6,10 +6,10 @@ export default function NotFound() {
   const { t } = useTranslation()
   useDocumentTitle(t('notFound.title'))
   return (
-    <div className="text-center py-20">
-      <h1 className="text-4xl font-bold mb-4">404</h1>
-      <p className="text-gray-500 mb-6">{t('notFound.title')}</p>
-      <Link to="/" className="text-teal-600 hover:underline">{t('notFound.goHome')}</Link>
+    <div className="py-20 text-center">
+      <h1 className="mb-4 font-display text-6xl font-bold tracking-tight text-ink">404</h1>
+      <p className="mb-6 text-muted">{t('notFound.title')}</p>
+      <Link to="/" className="text-sm text-accent hover:underline">{t('notFound.goHome')}</Link>
     </div>
   )
 }

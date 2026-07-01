@@ -7,8 +7,11 @@ import NotificationsDropdown from '../../features/notifications/components/Notif
 
 const navLinkClass = ({ isActive }) =>
   isActive
-    ? 'text-teal-600 dark:text-teal-400 font-medium border-b-2 border-teal-600 dark:border-teal-400 pb-0.5'
-    : 'text-gray-600 dark:text-gray-300 hover:text-teal-600 pb-0.5 border-b-2 border-transparent'
+    ? 'text-ink font-medium border-b-2 border-accent pb-0.5'
+    : 'text-muted hover:text-ink pb-0.5 border-b-2 border-transparent transition-colors'
+
+const iconBtn =
+  'flex h-8 items-center rounded-lg px-2 text-sm text-muted hover:bg-surface-2 hover:text-ink transition-colors'
 
 export default function Navbar() {
   const { t, i18n } = useTranslation()
@@ -26,13 +29,16 @@ export default function Navbar() {
   }
 
   return (
-    <nav className="border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 px-4 py-3">
+    <nav className="sticky top-0 z-30 border-b border-border bg-surface/90 px-4 py-3 backdrop-blur">
       <div className="container mx-auto flex items-center justify-between">
         <div className="flex items-center gap-6">
-          <Link to="/" className="text-xl font-bold text-teal-600 dark:text-teal-400">
+          <Link
+            to="/"
+            className="font-display text-base font-bold tracking-tight text-accent"
+          >
             {t('common.appName')}
           </Link>
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-4 text-sm">
             <NavLink to="/" end className={navLinkClass}>{t('common.home')}</NavLink>
             <NavLink to="/browse" className={navLinkClass}>{t('common.browse')}</NavLink>
             {user && (
@@ -41,11 +47,11 @@ export default function Navbar() {
           </div>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2">
           <button
             onClick={toggleTheme}
             aria-label={t('common.toggleTheme', { defaultValue: 'Toggle theme' })}
-            className="px-2 py-1 text-sm text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded"
+            className={iconBtn}
           >
             {theme === 'dark' ? '☀️' : '🌙'}
           </button>
@@ -53,20 +59,30 @@ export default function Navbar() {
           <button
             onClick={toggleLang}
             aria-label={t('common.toggleLanguage', { defaultValue: 'Toggle language' })}
-            className="px-2 py-1 text-sm text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded"
+            className={`${iconBtn} font-mono`}
           >
             {i18n.language === 'en' ? 'HR' : 'EN'}
           </button>
 
           {user ? (
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2">
               <NotificationsDropdown />
-              <NavLink to={`/profile/${user.id}`} className={navLinkClass}>
-                {t('common.profile')}
+              <NavLink
+                to={`/profile/${user.id}`}
+                aria-label={t('common.profile')}
+                className={({ isActive }) =>
+                  `flex h-8 w-8 items-center justify-center rounded-full text-xs font-semibold uppercase transition ${
+                    isActive
+                      ? 'bg-accent text-white'
+                      : 'bg-accent-soft text-accent hover:brightness-95'
+                  }`
+                }
+              >
+                {(user.user_metadata?.username || user.email || '?')[0]?.toUpperCase()}
               </NavLink>
               <button
                 onClick={() => logout.mutate()}
-                className="text-red-500 hover:text-red-700"
+                className="rounded-lg px-2 py-1 text-sm text-muted hover:text-down transition-colors"
               >
                 {t('common.logout')}
               </button>
@@ -75,13 +91,13 @@ export default function Navbar() {
             <div className="flex items-center gap-2">
               <Link
                 to="/login"
-                className="px-3 py-1.5 text-sm text-teal-600 hover:text-teal-800"
+                className="px-3 py-1.5 text-sm text-accent hover:text-accent-hover transition-colors"
               >
                 {t('common.login')}
               </Link>
               <Link
                 to="/register"
-                className="px-3 py-1.5 text-sm bg-teal-600 text-white rounded hover:bg-teal-700"
+                className="rounded-lg bg-accent px-3 py-1.5 text-sm font-medium text-white hover:bg-accent-hover transition-colors"
               >
                 {t('common.register')}
               </Link>

@@ -12,7 +12,12 @@ export default function App() {
         position="bottom-right"
         toastOptions={{
           duration: 4000,
-          style: { background: '#333', color: '#fff' },
+          style: {
+            background: 'var(--surface)',
+            color: 'var(--ink)',
+            border: '1px solid var(--border)',
+            borderRadius: '10px',
+          },
         }}
       />
     </>
