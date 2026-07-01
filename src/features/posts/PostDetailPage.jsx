@@ -1,14 +1,18 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { useParams, Link } from 'react-router-dom'
+import { useParams, Link, useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { useForm } from 'react-hook-form'
 import { useQueryClient } from '@tanstack/react-query'
 import toast from 'react-hot-toast'
-import { usePost, useUpdatePost } from '../hooks/usePosts'
-import { useAuthStore } from '../stores/authStore'
-import { supabase } from '../lib/supabase'
-import VoteControls from '../components/VoteControls'
-import CommentsSection from '../components/CommentsSection'
+import { usePost, useUpdatePost, useDeletePost } from '../../api/posts'
+import { useAuthStore } from '../../stores/auth'
+import { supabase } from '../../api/supabase'
+import { useDocumentTitle } from '../../utils/useDocumentTitle'
+import Field from '../../components/Field'
+import VoteControls from './components/VoteControls'
+import ShareButton from './components/ShareButton'
+import BookmarkButton from './components/BookmarkButton'
+import CommentsSection from '../comments/components/CommentsSection'
 
 const MAX_IMAGE_BYTES = 5 * 1024 * 1024
 const ALLOWED_IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/webp']
@@ -16,10 +20,13 @@ const ALLOWED_IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/webp']
 export default function PostDetail() {
   const { id } = useParams()
   const { t, i18n } = useTranslation()
+  const navigate = useNavigate()
   const queryClient = useQueryClient()
   const user = useAuthStore((state) => state.user)
   const { data: post, isLoading, isError, error } = usePost(id)
+  useDocumentTitle(post?.title)
   const updatePost = useUpdatePost()
+  const deletePost = useDeletePost()
   const countedFor = useRef(null)
   const fileInputRef = useRef(null)
   const [isEditing, setIsEditing] = useState(false)
@@ -63,6 +70,20 @@ export default function PostDetail() {
     setImageFile(null)
     setRemoveImage(false)
     setIsEditing(false)
+  }
+  const handleDelete = () => {
+    if (!confirm(t('post.deleteConfirm'))) return
+    deletePost.mutate(post.id, {
+      onSuccess: async () => {
+        if (post.image_url) {
+          const path = post.image_url.split('/post-images/')[1]
+          if (path) {
+            await supabase.storage.from('post-images').remove([path]).catch(() => {})
+          }
+        }
+        navigate('/')
+      },
+    })
   }
   const pickImage = (e) => {
     const f = e.target.files?.[0]
@@ -142,8 +163,7 @@ export default function PostDetail() {
     <article className="max-w-3xl mx-auto">
       {isEditing ? (
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 mb-6">
-          <div>
-            <label className="block text-sm font-medium mb-1">{t('post.titleLabel')}</label>
+          <Field label={t('post.titleLabel')} error={errors.title?.message}>
             <input
               type="text"
               {...register('title', {
@@ -153,10 +173,8 @@ export default function PostDetail() {
               })}
               className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-800"
             />
-            {errors.title && <p className="text-red-500 text-sm mt-1">{errors.title.message}</p>}
-          </div>
-          <div>
-            <label className="block text-sm font-medium mb-1">{t('post.bodyLabel')}</label>
+          </Field>
+          <Field label={t('post.bodyLabel')} error={errors.body?.message}>
             <textarea
               rows={10}
               {...register('body', {
@@ -166,18 +184,18 @@ export default function PostDetail() {
               })}
               className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-800"
             />
-            {errors.body && <p className="text-red-500 text-sm mt-1">{errors.body.message}</p>}
-          </div>
+          </Field>
 
           <div>
-            <label className="block text-sm font-medium mb-1">{t('post.imageLabel')}</label>
-            <input
-              type="file"
-              accept={ALLOWED_IMAGE_TYPES.join(',')}
-              ref={fileInputRef}
-              onChange={pickImage}
-              className="sr-only"
-            />
+            <Field label={t('post.imageLabel')}>
+              <input
+                type="file"
+                accept={ALLOWED_IMAGE_TYPES.join(',')}
+                ref={fileInputRef}
+                onChange={pickImage}
+                className="sr-only"
+              />
+            </Field>
             {imageFile ? (
               <div className="space-y-2">
                 <img
@@ -209,7 +227,7 @@ export default function PostDetail() {
                 <button
                   type="button"
                   onClick={() => setRemoveImage(false)}
-                  className="text-blue-600 hover:underline"
+                  className="text-teal-600 hover:underline"
                 >
                   {t('post.undo')}
                 </button>
@@ -261,7 +279,7 @@ export default function PostDetail() {
             <button
               type="submit"
               disabled={submitting}
-              className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50"
+              className="px-4 py-2 bg-teal-600 text-white rounded hover:bg-teal-700 disabled:opacity-50"
             >
               {uploading ? t('post.uploading') : submitting ? t('common.loading') : t('common.save')}
             </button>
@@ -287,9 +305,31 @@ export default function PostDetail() {
               <span>@{post.profiles?.username}</span>
             </Link>
             <span>·</span>
-            <span>{t(`categories.${post.categories?.slug}`, { defaultValue: post.categories?.name })}</span>
+            {post.categories?.slug ? (
+              <Link
+                to={`/browse?category=${post.categories.slug}`}
+                className="inline-flex items-center px-2 py-0.5 rounded-full text-xs bg-teal-50 dark:bg-teal-900/30 text-teal-700 dark:text-teal-300 hover:bg-teal-100 dark:hover:bg-teal-900/60"
+              >
+                {t(`categories.${post.categories.slug}`, { defaultValue: post.categories.name })}
+              </Link>
+            ) : null}
             <span>·</span>
-            <span>{t(`countries.${post.countries?.code}`, { defaultValue: post.countries?.name })}</span>
+            {post.countries?.code ? (
+              <Link
+                to={`/browse?country=${post.countries.code}`}
+                className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-xs bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700"
+              >
+                <img
+                  src={`https://flagcdn.com/w20/${post.countries.code.toLowerCase()}.png`}
+                  alt=""
+                  width="16"
+                  height="12"
+                  loading="lazy"
+                  className="h-3 w-4 rounded-sm object-cover"
+                />
+                {t(`countries.${post.countries.code}`, { defaultValue: post.countries.name })}
+              </Link>
+            ) : null}
             <span>·</span>
             <span>{createdAt}</span>
             {post.is_edited && <span className="italic">({t('post.edited')})</span>}
@@ -299,9 +339,18 @@ export default function PostDetail() {
                 <button
                   type="button"
                   onClick={startEdit}
-                  className="text-gray-600 hover:text-blue-600 dark:text-gray-300"
+                  className="text-gray-600 hover:text-teal-600 dark:text-gray-300"
                 >
                   {t('common.edit')}
+                </button>
+                <span>·</span>
+                <button
+                  type="button"
+                  onClick={handleDelete}
+                  disabled={deletePost.isPending}
+                  className="text-red-500 hover:text-red-700 disabled:opacity-50"
+                >
+                  {t('common.delete')}
                 </button>
               </>
             )}
@@ -330,6 +379,18 @@ export default function PostDetail() {
         />
         <span>·</span>
         <span>{post.comment_count} {t('post.comments').toLowerCase()}</span>
+        <span>·</span>
+        <ShareButton
+          url={`${window.location.origin}/post/${post.id}`}
+          shareUrl={
+            import.meta.env.VITE_SHARE_URL_BASE
+              ? `${import.meta.env.VITE_SHARE_URL_BASE}?id=${post.id}`
+              : undefined
+          }
+          title={post.title}
+        />
+        <span>·</span>
+        <BookmarkButton postId={post.id} />
         <span>·</span>
         <span aria-label={t('post.views')} className="inline-flex items-center gap-1">
           <svg
