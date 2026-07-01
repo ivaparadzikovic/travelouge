@@ -18,4 +18,12 @@ i18n
     },
   })
 
+function applyLang(lng) {
+  if (typeof document !== 'undefined' && lng) {
+    document.documentElement.lang = lng
+  }
+}
+applyLang(i18n.resolvedLanguage ?? i18n.language)
+i18n.on('languageChanged', applyLang)
+
 export default i18n

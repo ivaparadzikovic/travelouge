@@ -33,7 +33,14 @@
     "comments": "Comments",
     "votes": "votes",
     "share": "Share",
+    "copyLink": "Copy link",
+    "linkCopied": "Link copied",
+    "moreOptions": "More options",
+    "save": "Save",
+    "unsave": "Saved",
+    "signInToSave": "Sign in to save posts",
     "edited": "edited",
+    "deleteConfirm": "Delete this post? Its comments and votes will be removed too.",
     "views": "views",
     "view": "view",
     "noResults": "No posts found",
@@ -90,7 +97,17 @@
     "noAccount": "Don't have an account?",
     "hasAccount": "Already have an account?",
     "setUsernameTitle": "Pick your username",
-    "setUsernameSubtitle": "Finish setting up your account by choosing a unique username."
+    "setUsernameSubtitle": "Finish setting up your account by choosing a unique username.",
+    "wrongPassword": "Wrong password",
+    "forgotPassword": "Forgot password?",
+    "forgotPasswordTitle": "Reset your password",
+    "forgotPasswordSubtitle": "Enter your email and we'll send you a link to reset your password.",
+    "sendResetLink": "Send reset link",
+    "resetLinkSent": "If that email is registered, a reset link is on its way. Check your inbox.",
+    "backToLogin": "Back to log in",
+    "resetPasswordTitle": "Set a new password",
+    "newPassword": "New password",
+    "passwordUpdated": "Password updated. You're now signed in."
   },
   "categories": {
     "food": "Food",
@@ -171,9 +188,19 @@
     "displayName": "Display Name",
     "bio": "Bio",
     "reputation": "Reputation",
+    "reputationExplain": {
+      "title": "How reputation is earned",
+      "post": "+1 for publishing a post",
+      "comment": "+2 for writing a comment",
+      "upvote": "+10 when someone upvotes your post",
+      "downvote": "−2 when someone downvotes your post"
+    },
     "posts": "Posts",
     "noPostsYet": "No posts yet",
+    "saved": "Saved",
+    "noSavedYet": "Nothing saved yet",
     "userNotFound": "User not found",
+    "badgesLegend": "All badges",
     "badges": {
       "pencil": { "name": "First Post", "description": "Published your first post" },
       "globe": { "name": "Explorer", "description": "Posted about 5 different countries" },
@@ -200,6 +227,10 @@
   "notFound": {
     "title": "Page not found",
     "goHome": "Go home"
+  },
+  "search": {
+    "resultsFor": "Results for",
+    "minChars": "Type at least 2 characters."
   },
   "comments": {
     "placeholder": "Write a comment...",

@@ -1,32 +1,20 @@
-import { createBrowserRouter, RouterProvider } from 'react-router-dom'
-import RootLayout from './layouts/RootLayout'
-import Home from './pages/Home'
-import PostDetail from './pages/PostDetail'
-import CreatePost from './pages/CreatePost'
-import Profile from './pages/Profile'
-import Login from './pages/Login'
-import Register from './pages/Register'
-import Browse from './pages/Browse'
-import NotFound from './pages/NotFound'
-import ProtectedRoute from './components/ProtectedRoute'
-
-const router = createBrowserRouter([
-  {
-    path: '/',
-    element: <RootLayout />,
-    children: [
-      { index: true, element: <Home /> },
-      { path: 'post/:id', element: <PostDetail /> },
-      { path: 'create', element: <ProtectedRoute><CreatePost /></ProtectedRoute> },
-      { path: 'profile/:id', element: <Profile /> },
-      { path: 'login', element: <Login /> },
-      { path: 'register', element: <Register /> },
-      { path: 'browse', element: <Browse /> },
-      { path: '*', element: <NotFound /> },
-    ],
-  },
-])
+import { RouterProvider } from 'react-router-dom'
+import { Toaster } from 'react-hot-toast'
+import { router } from './routes'
+import { useAuthLifecycle } from './api/auth'
 
 export default function App() {
-  return <RouterProvider router={router} />
+  useAuthLifecycle()
+  return (
+    <>
+      <RouterProvider router={router} />
+      <Toaster
+        position="bottom-right"
+        toastOptions={{
+          duration: 4000,
+          style: { background: '#333', color: '#fff' },
+        }}
+      />
+    </>
+  )
 }

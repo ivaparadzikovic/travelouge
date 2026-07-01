@@ -34,7 +34,14 @@
     "comments": "Komentari",
     "votes": "glasova",
     "share": "Podijeli",
+    "copyLink": "Kopiraj poveznicu",
+    "linkCopied": "Poveznica kopirana",
+    "moreOptions": "Više opcija",
+    "save": "Spremi",
+    "unsave": "Spremljeno",
+    "signInToSave": "Prijavi se za spremanje",
     "edited": "uređeno",
+    "deleteConfirm": "Obrisati ovu objavu? Obrisat će se i njezini komentari i glasovi.",
     "views": "pregleda",
     "view": "pregled",
     "noResults": "Nema pronađenih objava",
@@ -91,7 +98,17 @@
     "noAccount": "Nemaš račun?",
     "hasAccount": "Već imaš račun?",
     "setUsernameTitle": "Odaberi korisničko ime",
-    "setUsernameSubtitle": "Dovrši postavljanje računa odabirom jedinstvenog korisničkog imena."
+    "setUsernameSubtitle": "Dovrši postavljanje računa odabirom jedinstvenog korisničkog imena.",
+    "wrongPassword": "Netočna lozinka",
+    "forgotPassword": "Zaboravio/la si lozinku?",
+    "forgotPasswordTitle": "Resetiraj lozinku",
+    "forgotPasswordSubtitle": "Unesi svoj email i poslat ćemo ti poveznicu za promjenu lozinke.",
+    "sendResetLink": "Pošalji poveznicu",
+    "resetLinkSent": "Ako je taj email registriran, poveznica za promjenu lozinke stiže. Provjeri inbox.",
+    "backToLogin": "Natrag na prijavu",
+    "resetPasswordTitle": "Postavi novu lozinku",
+    "newPassword": "Nova lozinka",
+    "passwordUpdated": "Lozinka je promijenjena. Sada si prijavljen/a."
   },
   "categories": {
     "food": "Hrana",
@@ -172,9 +189,19 @@
     "displayName": "Ime za prikaz",
     "bio": "Biografija",
     "reputation": "Reputacija",
+    "reputationExplain": {
+      "title": "Kako se računa reputacija",
+      "post": "+1 za objavljenu objavu",
+      "comment": "+2 za napisan komentar",
+      "upvote": "+10 kad netko glasa za tvoju objavu",
+      "downvote": "−2 kad netko glasa protiv tvoje objave"
+    },
     "posts": "Objave",
     "noPostsYet": "Još nema objava",
+    "saved": "Spremljeno",
+    "noSavedYet": "Još ništa nije spremljeno",
     "userNotFound": "Korisnik nije pronađen",
+    "badgesLegend": "Sve značke",
     "badges": {
       "pencil": { "name": "Prva objava", "description": "Objavio/la prvu objavu" },
       "globe": { "name": "Istraživač", "description": "Objavio/la o 5 različitih zemalja" },
@@ -192,7 +219,7 @@
     "downvote": "Glasaj protiv",
     "signInToVote": "Prijavi se za glasanje",
     "cannotVoteOwnPost": "Ne možeš glasati za vlastiti post",
-    "seeVoters": "Vidi tko je glasao",
+    "seeVoters": "Glasovi",
     "upvoters": "Glasovi za",
     "downvoters": "Glasovi protiv",
     "noVoters": "Još nema glasova",
@@ -201,6 +228,10 @@
   "notFound": {
     "title": "Stranica nije pronađena",
     "goHome": "Idi na početnu"
+  },
+  "search": {
+    "resultsFor": "Rezultati za",
+    "minChars": "Upiši barem 2 znaka."
   },
   "comments": {
     "placeholder": "Napiši komentar...",
@@ -221,9 +252,9 @@
     "empty": "Još nema obavijesti",
     "markAllRead": "Označi sve kao pročitano",
     "viewAll": "Prikaži sve",
-    "upvote": "glasao je za tvoju objavu",
-    "downvote": "glasao je protiv tvoje objave",
-    "comment": "komentirao je tvoju objavu",
+    "upvote": "glasao/la je za tvoju objavu",
+    "downvote": "glasao/la je protiv tvoje objave",
+    "comment": "komentirao/la je tvoju objavu",
     "deletedPost": "(obrisana objava)",
     "open": "Otvori obavijesti"
   }
