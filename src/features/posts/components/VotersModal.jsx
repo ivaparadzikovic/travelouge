@@ -6,7 +6,7 @@ import { usePostVoters } from '../../../api/votes'
 function VoterList({ items }) {
   const { t } = useTranslation()
   if (!items.length) {
-    return <p className="text-sm text-gray-500 py-2">{t('vote.noVoters')}</p>
+    return <p className="py-2 text-sm text-muted">{t('vote.noVoters')}</p>
   }
   return (
     <ul className="space-y-2">
@@ -18,12 +18,12 @@ function VoterList({ items }) {
           <li key={p.id}>
             <Link
               to={`/profile/${p.id}`}
-              className="flex items-center gap-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded p-1"
+              className="flex items-center gap-2 rounded p-1 hover:bg-surface-2 transition-colors"
             >
               {p.avatar_url ? (
                 <img src={p.avatar_url} alt="" className="w-7 h-7 rounded-full object-cover" />
               ) : (
-                <span className="w-7 h-7 rounded-full bg-gray-300 dark:bg-gray-600 flex items-center justify-center text-xs">
+                <span className="flex h-7 w-7 items-center justify-center rounded-full bg-accent-soft text-xs font-semibold text-accent">
                   {name[0]?.toUpperCase()}
                 </span>
               )}
@@ -56,34 +56,34 @@ export default function VotersModal({ postId, onClose }) {
       aria-modal="true"
     >
       <div
-        className="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-lg max-h-[80vh] flex flex-col"
+        className="flex max-h-[80vh] w-full max-w-lg flex-col rounded-2xl border border-border bg-surface shadow-xl"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex items-center justify-between px-4 py-3 border-b border-gray-200 dark:border-gray-700">
-          <h3 className="font-semibold">{t('vote.seeVoters')}</h3>
+        <div className="flex items-center justify-between border-b border-border px-4 py-3">
+          <h3 className="font-display font-semibold text-ink">{t('vote.seeVoters')}</h3>
           <button
             type="button"
             onClick={onClose}
             aria-label={t('vote.close')}
-            className="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"
+            className="text-muted hover:text-ink transition-colors"
           >
             ✕
           </button>
         </div>
 
         <div className="flex-1 overflow-y-auto p-4">
-          {isLoading && <p className="text-sm text-gray-500">{t('common.loading')}</p>}
-          {isError && <p className="text-sm text-red-500">{error.message}</p>}
+          {isLoading && <p className="text-sm text-muted">{t('common.loading')}</p>}
+          {isError && <p className="text-sm text-down">{error.message}</p>}
           {data && (
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
               <div>
-                <h4 className="text-sm font-medium text-green-700 dark:text-green-400 mb-2">
+                <h4 className="mb-2 text-sm font-medium text-up">
                   {t('vote.upvoters')} ({data.upvoters.length})
                 </h4>
                 <VoterList items={data.upvoters} />
               </div>
               <div>
-                <h4 className="text-sm font-medium text-red-700 dark:text-red-400 mb-2">
+                <h4 className="mb-2 text-sm font-medium text-down">
                   {t('vote.downvoters')} ({data.downvoters.length})
                 </h4>
                 <VoterList items={data.downvoters} />

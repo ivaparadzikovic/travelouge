@@ -5,9 +5,10 @@ import { useBrowsePosts } from '../../api/posts'
 import { useCountries } from '../../api/countries'
 import { useCategories } from '../../api/categories'
 import { useDocumentTitle } from '../../utils/useDocumentTitle'
-import Field from '../../components/Field'
 import PostCard from './components/PostCard'
 import PostCardSkeleton from './components/PostCardSkeleton'
+import SelectMenu from './components/SelectMenu'
+import CountryFlag from '../../components/CountryFlag'
 
 export default function Browse() {
   const { t, i18n } = useTranslation()
@@ -61,13 +62,15 @@ export default function Browse() {
 
   const collator = new Intl.Collator(i18n.language)
   const localizedCountries = countries
-    ?.map((c) => ({ id: c.id, label: t(`countries.${c.code}`, { defaultValue: c.name }) }))
+    ?.map((c) => ({
+      id: c.id,
+      label: t(`countries.${c.code}`, { defaultValue: c.name }),
+      icon: <CountryFlag code={c.code} />,
+    }))
     .sort((a, b) => collator.compare(a.label, b.label))
   const localizedCategories = categories
     ?.map((c) => ({ id: c.id, label: t(`categories.${c.slug}`, { defaultValue: c.name }) }))
     .sort((a, b) => collator.compare(a.label, b.label))
-
-  const inputClass = 'w-full rounded-lg border border-border bg-surface px-3 py-2 text-ink placeholder:text-muted focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/30'
 
   return (
     <div>
@@ -97,31 +100,37 @@ export default function Browse() {
         </div>
       </form>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
-        <Field label={t('post.countryLabel')}>
-          <select
-            value={countryId}
-            onChange={(e) => setCountryFromId(e.target.value)}
-            className={inputClass}
-          >
-            <option value="">{t('browse.allCountries')}</option>
-            {localizedCountries?.map((c) => (
-              <option key={c.id} value={c.id}>{c.label}</option>
-            ))}
-          </select>
-        </Field>
-        <Field label={t('post.categoryLabel')}>
-          <select
-            value={categoryId}
-            onChange={(e) => setCategoryFromId(e.target.value)}
-            className={inputClass}
-          >
-            <option value="">{t('browse.allCategories')}</option>
-            {localizedCategories?.map((c) => (
-              <option key={c.id} value={c.id}>{c.label}</option>
-            ))}
-          </select>
-        </Field>
+      <div className="mb-6 flex flex-wrap items-center gap-2">
+        <SelectMenu
+          options={[
+            { id: '', label: t('browse.allCountries') },
+            ...(localizedCountries ?? []),
+          ]}
+          value={countryId}
+          onChange={(id) => setCountryFromId(id)}
+          placeholder={t('browse.allCountries')}
+          aria-label={t('post.countryLabel')}
+          className="inline-block"
+          triggerClass="rounded-lg border border-border bg-surface px-3 py-1.5 text-xs text-ink focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/30"
+        />
+        {localizedCategories?.map((c) => {
+          const active = String(c.id) === String(categoryId)
+          return (
+            <button
+              key={c.id}
+              type="button"
+              onClick={() => setCategoryFromId(active ? '' : c.id)}
+              aria-pressed={active}
+              className={
+                active
+                  ? 'rounded-lg bg-accent px-3 py-1.5 text-xs font-semibold text-accent-ink'
+                  : 'rounded-lg bg-surface-2 px-3 py-1.5 text-xs text-muted hover:text-ink transition-colors'
+              }
+            >
+              {c.label}
+            </button>
+          )
+        })}
       </div>
 
       {isError && <p className="text-down">{error.message}</p>}

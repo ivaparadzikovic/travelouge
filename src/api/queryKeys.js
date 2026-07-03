@@ -40,9 +40,3 @@ export const countryKeys = {
   all: ['countries'],
   popular: (limit) => [...countryKeys.all, 'popular', limit],
 }
-
-export const bookmarkKeys = {
-  all: ['bookmarks'],
-  list: (userId) => [...bookmarkKeys.all, 'list', userId],
-  byPost: (postId, userId) => [...bookmarkKeys.all, 'post', postId, userId],
-}

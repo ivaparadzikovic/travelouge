@@ -29,7 +29,7 @@ export default function Home() {
         {user && (
           <Link
             to="/create"
-            className="rounded-lg bg-accent px-4 py-2 text-sm font-semibold text-white hover:bg-accent-hover transition-colors"
+            className="rounded-lg bg-accent px-4 py-2 text-sm font-semibold text-accent-ink hover:bg-accent-hover transition-colors"
           >
             {t('common.create')}
           </Link>

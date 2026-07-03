@@ -9,3 +9,8 @@ export {
   useUpdatePost,
   useDeletePost,
 } from './postsMutations'
+export {
+  postImageList,
+  uploadPostImages,
+  removePostImagesByUrl,
+} from './postImages'

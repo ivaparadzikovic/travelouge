@@ -18,9 +18,9 @@ export default function UsernameSetupModal({ userId }) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">
-      <div className="w-full max-w-md rounded-lg bg-white p-6 shadow-xl dark:bg-gray-800">
-        <h2 className="mb-2 text-xl font-bold">{t('auth.setUsernameTitle')}</h2>
-        <p className="mb-4 text-sm text-gray-600 dark:text-gray-400">
+      <div className="w-full max-w-md rounded-2xl border border-border bg-surface p-6 shadow-xl">
+        <h2 className="mb-2 font-display text-xl font-bold tracking-tight text-ink">{t('auth.setUsernameTitle')}</h2>
+        <p className="mb-4 text-sm text-muted">
           {t('auth.setUsernameSubtitle')}
         </p>
 
@@ -31,14 +31,14 @@ export default function UsernameSetupModal({ userId }) {
               autoComplete="username"
               autoFocus
               {...register('username')}
-              className="w-full rounded border border-gray-300 bg-white px-3 py-2 dark:border-gray-600 dark:bg-gray-900"
+              className="w-full rounded-lg border border-border bg-surface px-3 py-2 text-ink placeholder:text-muted focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/30"
             />
           </Field>
 
           <button
             type="submit"
             disabled={isSubmitting || updateProfile.isPending}
-            className="w-full rounded bg-teal-600 py-2 text-white hover:bg-teal-700 disabled:opacity-50"
+            className="w-full rounded-lg bg-accent py-2.5 text-sm font-semibold text-accent-ink hover:bg-accent-hover transition-colors disabled:opacity-50"
           >
             {updateProfile.isPending ? t('common.loading') : t('common.save')}
           </button>

@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { useAuthStore } from '../../stores/auth'
 import { useThemeStore } from '../../stores/theme'
 import { useLogout } from '../../api/auth'
+import { useProfile } from '../../api/profile'
 import NotificationsDropdown from '../../features/notifications/components/NotificationsDropdown'
 
 const navLinkClass = ({ isActive }) =>
@@ -16,6 +17,7 @@ const iconBtn =
 export default function Navbar() {
   const { t, i18n } = useTranslation()
   const user = useAuthStore((state) => state.user)
+  const { data: profile } = useProfile(user?.id)
   const theme = useThemeStore((s) => s.theme)
   const setTheme = useThemeStore((s) => s.setTheme)
   const logout = useLogout()
@@ -31,14 +33,14 @@ export default function Navbar() {
   return (
     <nav className="sticky top-0 z-30 border-b border-border bg-surface/90 px-4 py-3 backdrop-blur">
       <div className="container mx-auto flex items-center justify-between">
-        <div className="flex items-center gap-6">
+        <div className="flex items-baseline gap-6">
           <Link
             to="/"
-            className="font-display text-base font-bold tracking-tight text-accent"
+            className="font-display text-base font-bold leading-none tracking-tight text-accent"
           >
             {t('common.appName')}
           </Link>
-          <div className="flex items-center gap-4 text-sm">
+          <div className="flex items-baseline gap-4 text-sm">
             <NavLink to="/" end className={navLinkClass}>{t('common.home')}</NavLink>
             <NavLink to="/browse" className={navLinkClass}>{t('common.browse')}</NavLink>
             {user && (
@@ -71,14 +73,26 @@ export default function Navbar() {
                 to={`/profile/${user.id}`}
                 aria-label={t('common.profile')}
                 className={({ isActive }) =>
-                  `flex h-8 w-8 items-center justify-center rounded-full text-xs font-semibold uppercase transition ${
-                    isActive
-                      ? 'bg-accent text-white'
-                      : 'bg-accent-soft text-accent hover:brightness-95'
+                  `flex h-8 w-8 items-center justify-center overflow-hidden rounded-full text-xs font-semibold uppercase transition ${
+                    profile?.avatar_url
+                      ? isActive
+                        ? 'ring-2 ring-accent'
+                        : 'hover:brightness-95'
+                      : isActive
+                        ? 'bg-accent text-accent-ink'
+                        : 'bg-accent-soft text-accent hover:brightness-95'
                   }`
                 }
               >
-                {(user.user_metadata?.username || user.email || '?')[0]?.toUpperCase()}
+                {profile?.avatar_url ? (
+                  <img
+                    src={profile.avatar_url}
+                    alt=""
+                    className="h-full w-full object-cover"
+                  />
+                ) : (
+                  (user.user_metadata?.username || user.email || '?')[0]?.toUpperCase()
+                )}
               </NavLink>
               <button
                 onClick={() => logout.mutate()}
@@ -97,7 +111,7 @@ export default function Navbar() {
               </Link>
               <Link
                 to="/register"
-                className="rounded-lg bg-accent px-3 py-1.5 text-sm font-medium text-white hover:bg-accent-hover transition-colors"
+                className="rounded-lg bg-accent px-3 py-1.5 text-sm font-medium text-accent-ink hover:bg-accent-hover transition-colors"
               >
                 {t('common.register')}
               </Link>

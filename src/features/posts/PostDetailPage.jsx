@@ -4,18 +4,25 @@ import { useTranslation } from 'react-i18next'
 import { useForm } from 'react-hook-form'
 import { useQueryClient } from '@tanstack/react-query'
 import toast from 'react-hot-toast'
-import { usePost, useUpdatePost, useDeletePost } from '../../api/posts'
+import {
+  usePost,
+  useUpdatePost,
+  useDeletePost,
+  postImageList,
+  uploadPostImages,
+  removePostImagesByUrl,
+} from '../../api/posts'
 import { useAuthStore } from '../../stores/auth'
 import { supabase } from '../../api/supabase'
 import { useDocumentTitle } from '../../utils/useDocumentTitle'
 import Field from '../../components/Field'
+import CountryFlag from '../../components/CountryFlag'
 import VoteControls from './components/VoteControls'
 import ShareButton from './components/ShareButton'
-import BookmarkButton from './components/BookmarkButton'
+import PostGallery from './components/PostGallery'
+import ImagePicker from './components/ImagePicker'
 import CommentsSection from '../comments/components/CommentsSection'
-
-const MAX_IMAGE_BYTES = 5 * 1024 * 1024
-const ALLOWED_IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/webp']
+import { MAX_IMAGES, imageFileError } from './form/postFormSchema'
 
 export default function PostDetail() {
   const { id } = useParams()
@@ -28,20 +35,21 @@ export default function PostDetail() {
   const updatePost = useUpdatePost()
   const deletePost = useDeletePost()
   const countedFor = useRef(null)
-  const fileInputRef = useRef(null)
   const [isEditing, setIsEditing] = useState(false)
-  const [imageFile, setImageFile] = useState(null)
-  const [removeImage, setRemoveImage] = useState(false)
+  // Images being edited: `existingImages` are already-stored URLs the user has
+  // chosen to keep; `newFiles` are freshly picked File objects to upload on save.
+  const [existingImages, setExistingImages] = useState([])
+  const [newFiles, setNewFiles] = useState([])
   const [uploading, setUploading] = useState(false)
   const { register, handleSubmit, reset, formState: { errors } } = useForm()
 
-  const previewUrl = useMemo(
-    () => (imageFile ? URL.createObjectURL(imageFile) : null),
-    [imageFile],
+  const newPreviews = useMemo(
+    () => newFiles.map((f) => URL.createObjectURL(f)),
+    [newFiles],
   )
   useEffect(() => {
-    return () => { if (previewUrl) URL.revokeObjectURL(previewUrl) }
-  }, [previewUrl])
+    return () => { newPreviews.forEach((url) => URL.revokeObjectURL(url)) }
+  }, [newPreviews])
 
   useEffect(() => {
     if (!id || countedFor.current === id) return
@@ -59,98 +67,99 @@ export default function PostDetail() {
 
   const createdAt = new Date(post.created_at).toLocaleString(i18n.language)
   const isOwner = user?.id === post.author_id
+  const originalImages = postImageList(post)
+  const totalImages = existingImages.length + newFiles.length
 
   const startEdit = () => {
     reset({ title: post.title, body: post.body })
-    setImageFile(null)
-    setRemoveImage(false)
+    setExistingImages(postImageList(post))
+    setNewFiles([])
     setIsEditing(true)
   }
   const cancelEdit = () => {
-    setImageFile(null)
-    setRemoveImage(false)
+    setNewFiles([])
     setIsEditing(false)
   }
   const handleDelete = () => {
     if (!confirm(t('post.deleteConfirm'))) return
     deletePost.mutate(post.id, {
       onSuccess: async () => {
-        if (post.image_url) {
-          const path = post.image_url.split('/post-images/')[1]
-          if (path) {
-            await supabase.storage.from('post-images').remove([path]).catch(() => {})
-          }
-        }
+        await removePostImagesByUrl(postImageList(post))
         navigate('/')
       },
     })
   }
-  const pickImage = (e) => {
-    const f = e.target.files?.[0]
-    e.target.value = ''
-    if (!f) return
-    if (!ALLOWED_IMAGE_TYPES.includes(f.type)) {
-      toast.error(t('post.imageInvalidType'))
+  const addFiles = (fileList) => {
+    const files = Array.from(fileList ?? [])
+    if (files.length === 0) return
+    const room = MAX_IMAGES - totalImages
+    if (room <= 0) {
+      toast.error(t('post.imageTooMany', { count: MAX_IMAGES }))
       return
     }
-    if (f.size > MAX_IMAGE_BYTES) {
-      toast.error(t('post.imageTooLarge'))
-      return
+    const accepted = []
+    for (const f of files) {
+      const err = imageFileError(f, t)
+      if (err) {
+        toast.error(err)
+        continue
+      }
+      accepted.push(f)
     }
-    setImageFile(f)
-    setRemoveImage(false)
+    if (accepted.length > room) {
+      toast.error(t('post.imageTooMany', { count: MAX_IMAGES }))
+    }
+    setNewFiles((prev) => [...prev, ...accepted.slice(0, room)])
   }
+  const removeExisting = (url) =>
+    setExistingImages((prev) => prev.filter((u) => u !== url))
+  const removeNewFile = (idx) =>
+    setNewFiles((prev) => prev.filter((_, i) => i !== idx))
 
   const onSubmit = async (data) => {
     const title = data.title.trim()
     const body = data.body.trim()
-    const replacing = !!imageFile
-    const removing = !replacing && removeImage
     const textUnchanged = title === post.title && body === post.body
+    const imagesUnchanged =
+      newFiles.length === 0 &&
+      existingImages.length === originalImages.length &&
+      existingImages.every((u, i) => u === originalImages[i])
 
-    if (textUnchanged && !replacing && !removing) {
+    if (textUnchanged && imagesUnchanged) {
       cancelEdit()
       return
     }
 
-    let nextImageUrl = post.image_url
-    if (replacing) {
+    let uploadedUrls = []
+    if (newFiles.length > 0) {
       try {
         setUploading(true)
-        const ext = imageFile.name.split('.').pop().toLowerCase()
-        const path = `${user.id}/${crypto.randomUUID()}.${ext}`
-        const { error: uploadError } = await supabase.storage
-          .from('post-images')
-          .upload(path, imageFile, { contentType: imageFile.type })
-        if (uploadError) throw uploadError
-        const { data: urlData } = supabase.storage
-          .from('post-images')
-          .getPublicUrl(path)
-        nextImageUrl = urlData.publicUrl
+        uploadedUrls = await uploadPostImages(newFiles, user.id)
       } catch (err) {
         toast.error(err.message)
         setUploading(false)
         return
       }
       setUploading(false)
-    } else if (removing) {
-      nextImageUrl = null
     }
 
-    if ((replacing || removing) && post.image_url) {
-      const oldPath = post.image_url.split('/post-images/')[1]
-      if (oldPath) {
-        // Best-effort cleanup; ignore failure so the post still saves.
-        await supabase.storage.from('post-images').remove([oldPath]).catch(() => {})
-      }
+    const finalUrls = [...existingImages, ...uploadedUrls]
+    const removedUrls = originalImages.filter((u) => !existingImages.includes(u))
+    if (removedUrls.length > 0) {
+      await removePostImagesByUrl(removedUrls)
     }
 
     updatePost.mutate(
-      { id: post.id, title, body, image_url: nextImageUrl },
+      {
+        id: post.id,
+        title,
+        body,
+        image_urls: finalUrls.length > 0 ? finalUrls : null,
+        image_url: finalUrls[0] ?? null,
+      },
       {
         onSuccess: () => {
-          setImageFile(null)
-          setRemoveImage(false)
+          setNewFiles([])
           setIsEditing(false)
         },
       },
@@ -187,84 +196,22 @@ export default function PostDetail() {
           </Field>
 
           <div>
-            <Field label={t('post.imageLabel')}>
-              <input
-                type="file"
-                accept={ALLOWED_IMAGE_TYPES.join(',')}
-                ref={fileInputRef}
-                onChange={pickImage}
-                className="sr-only"
-              />
-            </Field>
-            {imageFile ? (
-              <div className="space-y-2">
-                <img
-                  src={previewUrl}
-                  alt=""
-                  className="max-h-64 rounded-xl border border-border object-cover"
-                />
-                <div className="flex items-center gap-3 flex-wrap text-sm">
-                  <button
-                    type="button"
-                    onClick={() => fileInputRef.current?.click()}
-                    className="rounded-lg border border-border px-4 py-2 text-sm hover:bg-surface-2 transition-colors disabled:opacity-50"
-                  >
-                    {t('post.chooseImage')}
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setImageFile(null)}
-                    className="text-sm text-accent hover:underline"
-                  >
-                    {t('common.cancel')}
-                  </button>
-                  <span className="truncate text-muted">{imageFile.name}</span>
-                </div>
-              </div>
-            ) : removeImage ? (
-              <div className="flex items-center gap-3 text-sm">
-                <span className="italic text-muted">{t('post.imageWillBeRemoved')}</span>
-                <button
-                  type="button"
-                  onClick={() => setRemoveImage(false)}
-                  className="text-sm text-accent hover:underline"
-                >
-                  {t('post.undo')}
-                </button>
-              </div>
-            ) : post.image_url ? (
-              <div className="space-y-2">
-                <img
-                  src={post.image_url}
-                  alt=""
-                  className="max-h-64 rounded-xl border border-border object-cover"
-                />
-                <div className="flex items-center gap-3 flex-wrap text-sm">
-                  <button
-                    type="button"
-                    onClick={() => fileInputRef.current?.click()}
-                    className="rounded-lg border border-border px-4 py-2 text-sm hover:bg-surface-2 transition-colors disabled:opacity-50"
-                  >
-                    {t('post.replaceImage')}
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setRemoveImage(true)}
-                    className="text-sm text-down hover:underline"
-                  >
-                    {t('post.removeImage')}
-                  </button>
-                </div>
-              </div>
-            ) : (
-              <button
-                type="button"
-                onClick={() => fileInputRef.current?.click()}
-                className="rounded-lg border border-border px-4 py-2 text-sm hover:bg-surface-2 transition-colors disabled:opacity-50"
-              >
-                {t('post.addImage')}
-              </button>
-            )}
+            <div className="mb-1.5 text-sm font-medium text-ink">{t('post.photosLabel')}</div>
+            <ImagePicker
+              images={[
+                ...existingImages.map((url) => ({
+                  key: url,
+                  src: url,
+                  onRemove: () => removeExisting(url),
+                })),
+                ...newFiles.map((file, i) => ({
+                  key: `new-${i}-${file.name}`,
+                  src: newPreviews[i],
+                  onRemove: () => removeNewFile(i),
+                })),
+              ]}
+              onAdd={addFiles}
+            />
           </div>
 
           <div className="flex gap-2 justify-end">
@@ -287,68 +234,50 @@ export default function PostDetail() {
         </form>
       ) : (
         <>
-          <h1 className="text-3xl font-bold mb-2">{post.title}</h1>
+          <Link
+            to="/"
+            className="mb-4 inline-block text-xs text-muted hover:text-ink transition-colors"
+          >
+            ← {t('common.home')}
+          </Link>
 
-          <div className="flex items-center gap-3 text-sm text-gray-500 mb-6 flex-wrap">
-            <Link to={`/profile/${post.author_id}`} className="flex items-center gap-2 hover:underline">
-              {post.profiles?.avatar_url ? (
-                <img
-                  src={post.profiles.avatar_url}
-                  alt=""
-                  className="w-6 h-6 rounded-full object-cover"
-                />
-              ) : (
-                <span className="w-6 h-6 rounded-full bg-gray-300 dark:bg-gray-600 flex items-center justify-center text-xs">
-                  {post.profiles?.username?.[0]?.toUpperCase() || '?'}
-                </span>
-              )}
-              <span>@{post.profiles?.username}</span>
-            </Link>
-            <span>·</span>
-            {post.categories?.slug ? (
+          <div className="mb-3 flex flex-wrap items-center gap-2 text-xs text-muted">
+            {post.categories?.slug && (
               <Link
                 to={`/browse?category=${post.categories.slug}`}
-                className="inline-flex items-center px-2 py-0.5 rounded-full text-xs bg-teal-50 dark:bg-teal-900/30 text-teal-700 dark:text-teal-300 hover:bg-teal-100 dark:hover:bg-teal-900/60"
+                className="rounded-full bg-accent-soft px-2.5 py-0.5 text-[11px] font-medium text-accent hover:brightness-95"
               >
                 {t(`categories.${post.categories.slug}`, { defaultValue: post.categories.name })}
               </Link>
-            ) : null}
-            <span>·</span>
-            {post.countries?.code ? (
+            )}
+            {post.countries?.code && (
               <Link
                 to={`/browse?country=${post.countries.code}`}
-                className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-xs bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700"
+                className="inline-flex items-center gap-1.5 hover:text-ink transition-colors"
               >
-                <img
-                  src={`https://flagcdn.com/w20/${post.countries.code.toLowerCase()}.png`}
-                  alt=""
-                  width="16"
-                  height="12"
-                  loading="lazy"
-                  className="h-3 w-4 rounded-sm object-cover"
-                />
+                <CountryFlag code={post.countries.code} />
                 {t(`countries.${post.countries.code}`, { defaultValue: post.countries.name })}
               </Link>
-            ) : null}
-            <span>·</span>
+            )}
+            <span aria-hidden="true">·</span>
             <span>{createdAt}</span>
             {post.is_edited && <span className="italic">({t('post.edited')})</span>}
             {isOwner && (
               <>
-                <span>·</span>
+                <span aria-hidden="true">·</span>
                 <button
                   type="button"
                   onClick={startEdit}
-                  className="text-gray-600 hover:text-teal-600 dark:text-gray-300"
+                  className="text-muted hover:text-accent transition-colors"
                 >
                   {t('common.edit')}
                 </button>
-                <span>·</span>
+                <span aria-hidden="true">·</span>
                 <button
                   type="button"
                   onClick={handleDelete}
                   disabled={deletePost.isPending}
-                  className="text-red-500 hover:text-red-700 disabled:opacity-50"
+                  className="text-down hover:underline disabled:opacity-50"
                 >
                   {t('common.delete')}
                 </button>
@@ -356,21 +285,43 @@ export default function PostDetail() {
             )}
           </div>
 
-          {post.image_url && (
-            <img
-              src={post.image_url}
-              alt=""
-              className="w-full max-h-96 object-cover rounded mb-6"
-            />
-          )}
+          <h1 className="mb-4 font-display text-3xl font-bold leading-tight tracking-tight text-ink">
+            {post.title}
+          </h1>
 
-          <div className="prose dark:prose-invert whitespace-pre-wrap text-gray-800 dark:text-gray-200">
+          <Link
+            to={`/profile/${post.author_id}`}
+            className="mb-6 inline-flex items-center gap-2.5 hover:opacity-90"
+          >
+            {post.profiles?.avatar_url ? (
+              <img
+                src={post.profiles.avatar_url}
+                alt=""
+                className="h-9 w-9 rounded-full object-cover"
+              />
+            ) : (
+              <span className="flex h-9 w-9 items-center justify-center rounded-full bg-accent text-xs font-bold uppercase text-accent-ink">
+                {post.profiles?.username?.[0]?.toUpperCase() || '?'}
+              </span>
+            )}
+            <span className="text-sm leading-tight">
+              <span className="block font-semibold text-ink">@{post.profiles?.username}</span>
+              <span className="block text-xs text-muted">
+                {post.comment_count} {t('post.comments').toLowerCase()} · {post.view_count ?? 0}{' '}
+                {t('post.views')}
+              </span>
+            </span>
+          </Link>
+
+          <PostGallery images={postImageList(post)} alt={post.title} />
+
+          <div className="whitespace-pre-wrap text-[15px] leading-relaxed text-ink/90">
             {post.body}
           </div>
         </>
       )}
 
-      <div className="mt-8 flex items-center gap-4 text-sm text-gray-500 border-t border-gray-200 dark:border-gray-700 pt-4">
+      <div className="mt-8 flex flex-wrap items-center gap-4 rounded-xl border border-accent/20 bg-accent-soft px-4 py-3 text-sm text-muted">
         <VoteControls
           postId={post.id}
           authorId={post.author_id}
@@ -378,7 +329,25 @@ export default function PostDetail() {
           downvoteCount={post.downvote_count}
         />
         <span>·</span>
-        <span>{post.comment_count} {t('post.comments').toLowerCase()}</span>
+        <span aria-label={t('post.comments')} className="inline-flex items-center gap-1">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth={1.8}
+            className="w-4 h-4"
+            aria-hidden="true"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M7.5 8.25h9m-9 3H12m8.25.75c0 4.142-3.694 7.5-8.25 7.5a9.06 9.06 0 0 1-2.348-.306 4.5 4.5 0 0 1-3.328.734l.115-.06a3.75 3.75 0 0 0 1.42-2.856A7.207 7.207 0 0 1 3.75 12c0-4.142 3.694-7.5 8.25-7.5s8.25 3.358 8.25 7.5Z"
+            />
+          </svg>
+          <span className="tabular-nums">{post.comment_count}</span>{' '}
+          {t('post.comments').toLowerCase()}
+        </span>
         <span>·</span>
         <ShareButton
           url={`${window.location.origin}/post/${post.id}`}
@@ -389,8 +358,6 @@ export default function PostDetail() {
           }
           title={post.title}
         />
-        <span>·</span>
-        <BookmarkButton postId={post.id} />
         <span>·</span>
         <span aria-label={t('post.views')} className="inline-flex items-center gap-1">
           <svg

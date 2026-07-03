@@ -6,6 +6,7 @@ import toast from 'react-hot-toast'
 import { useLogin, useGoogleLogin } from '../../api/auth'
 import { useDocumentTitle } from '../../utils/useDocumentTitle'
 import Field from '../../components/Field'
+import GoogleButton from './components/GoogleButton'
 import { loginFormSchema } from './form/loginFormSchema'
 
 const inputClass = 'w-full rounded-lg border border-border bg-surface px-3 py-2 text-ink placeholder:text-muted focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/30'
@@ -33,58 +34,58 @@ export default function Login() {
   }
 
   return (
-    <div className="max-w-md mx-auto mt-10">
-      <h1 className="text-2xl font-bold mb-6">{t('auth.loginTitle')}</h1>
-
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-        <Field label={t('auth.identifier')} error={errors.identifier?.message}>
-          <input
-            type="text"
-            autoComplete="username"
-            {...register('identifier')}
-            className={inputClass}
-          />
-        </Field>
-
-        <Field label={t('auth.password')} error={errors.password?.message}>
-          <input
-            type="password"
-            autoComplete="current-password"
-            {...register('password')}
-            className={inputClass}
-          />
-        </Field>
-
-        <div className="text-right">
-          <Link to="/forgot-password" className="text-sm text-teal-600 hover:underline">
-            {t('auth.forgotPassword')}
-          </Link>
+    <div className="mx-auto mt-10 max-w-sm">
+      <div className="rounded-2xl border border-border bg-surface p-6 shadow-[0_10px_30px_-18px_rgba(20,24,44,0.35)]">
+        <div className="mb-1 text-center font-display text-base font-bold text-accent">
+          {t('common.appName')}
         </div>
+        <h1 className="mb-5 text-center font-display text-xl font-bold text-ink">
+          {t('auth.loginTitle')}
+        </h1>
 
-        <button
-          type="submit"
-          disabled={login.isPending}
-          className="w-full py-2 bg-teal-600 text-white rounded hover:bg-teal-700 disabled:opacity-50"
-        >
-          {login.isPending ? t('common.loading') : t('auth.loginTitle')}
-        </button>
-      </form>
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+          <Field label={t('auth.identifier')} error={errors.identifier?.message}>
+            <input
+              type="text"
+              autoComplete="username"
+              {...register('identifier')}
+              className={inputClass}
+            />
+          </Field>
 
-      <div className="mt-4">
-        <button
-          onClick={() => googleLogin.mutate()}
-          className="w-full py-2 border border-gray-300 dark:border-gray-600 rounded hover:bg-gray-50 dark:hover:bg-gray-800"
-        >
-          {t('auth.googleLogin')}
-        </button>
+          <Field label={t('auth.password')} error={errors.password?.message}>
+            <input
+              type="password"
+              autoComplete="current-password"
+              {...register('password')}
+              className={inputClass}
+            />
+          </Field>
+
+          <div className="text-right">
+            <Link to="/forgot-password" className="text-sm text-accent hover:underline">
+              {t('auth.forgotPassword')}
+            </Link>
+          </div>
+
+          <button
+            type="submit"
+            disabled={login.isPending}
+            className="w-full rounded-lg bg-accent py-2.5 text-sm font-semibold text-accent-ink hover:bg-accent-hover transition-colors disabled:opacity-50"
+          >
+            {login.isPending ? t('common.loading') : t('auth.loginTitle')}
+          </button>
+        </form>
+
+        <GoogleButton onClick={() => googleLogin.mutate()} disabled={googleLogin.isPending} />
+
+        <p className="mt-4 text-center text-sm text-muted">
+          {t('auth.noAccount')}{' '}
+          <Link to="/register" className="font-semibold text-accent hover:underline">
+            {t('common.register')}
+          </Link>
+        </p>
       </div>
-
-      <p className="mt-4 text-sm text-center text-gray-600 dark:text-gray-400">
-        {t('auth.noAccount')}{' '}
-        <Link to="/register" className="text-teal-600 hover:underline">
-          {t('common.register')}
-        </Link>
-      </p>
     </div>
   )
 }

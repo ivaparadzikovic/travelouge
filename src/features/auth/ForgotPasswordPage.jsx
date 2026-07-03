@@ -9,7 +9,7 @@ import { useDocumentTitle } from '../../utils/useDocumentTitle'
 import Field from '../../components/Field'
 import { forgotPasswordFormSchema } from './form/forgotPasswordFormSchema'
 
-const inputClass = 'w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-800'
+const inputClass = 'w-full rounded-lg border border-border bg-surface px-3 py-2 text-ink placeholder:text-muted focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/30'
 
 export default function ForgotPassword() {
   const { t } = useTranslation()
@@ -32,13 +32,13 @@ export default function ForgotPassword() {
 
   return (
     <div className="max-w-md mx-auto mt-10">
-      <h1 className="text-2xl font-bold mb-2">{t('auth.forgotPasswordTitle')}</h1>
-      <p className="text-sm text-gray-600 dark:text-gray-400 mb-6">
+      <h1 className="mb-2 font-display text-2xl font-bold tracking-tight text-ink">{t('auth.forgotPasswordTitle')}</h1>
+      <p className="mb-6 text-sm text-muted">
         {t('auth.forgotPasswordSubtitle')}
       </p>
 
       {sent ? (
-        <p className="text-sm text-gray-700 dark:text-gray-300">{t('auth.resetLinkSent')}</p>
+        <p className="text-sm text-ink">{t('auth.resetLinkSent')}</p>
       ) : (
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <Field label={t('auth.email')} error={errors.email?.message}>
@@ -53,15 +53,15 @@ export default function ForgotPassword() {
           <button
             type="submit"
             disabled={requestReset.isPending}
-            className="w-full py-2 bg-teal-600 text-white rounded hover:bg-teal-700 disabled:opacity-50"
+            className="w-full rounded-lg bg-accent py-2.5 text-sm font-semibold text-accent-ink hover:bg-accent-hover transition-colors disabled:opacity-50"
           >
             {requestReset.isPending ? t('common.loading') : t('auth.sendResetLink')}
           </button>
         </form>
       )}
 
-      <p className="mt-4 text-sm text-center text-gray-600 dark:text-gray-400">
-        <Link to="/login" className="text-teal-600 hover:underline">
+      <p className="mt-4 text-center text-sm text-muted">
+        <Link to="/login" className="font-semibold text-accent hover:underline">
           {t('auth.backToLogin')}
         </Link>
       </p>

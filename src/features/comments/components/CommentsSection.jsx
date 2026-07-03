@@ -73,8 +73,8 @@ export default function CommentsSection({ postId }) {
   }
 
   return (
-    <section className="mt-10 border-t border-gray-200 dark:border-gray-700 pt-6">
-      <h2 className="text-xl font-semibold mb-4">
+    <section className="mt-10 border-t border-border pt-6">
+      <h2 className="mb-4 font-display text-xl font-semibold text-ink">
         {t('post.comments')} ({comments.length})
       </h2>
 
@@ -90,22 +90,22 @@ export default function CommentsSection({ postId }) {
                 bodyRegister.ref(el)
                 textareaRef.current = el
               }}
-              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-800"
+              className="w-full rounded-lg border border-border bg-surface px-3 py-2 text-ink placeholder:text-muted focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/30"
             />
           </Field>
           <div className="mt-2 flex justify-end">
             <button
               type="submit"
               disabled={createComment.isPending}
-              className="px-4 py-2 bg-teal-600 text-white rounded hover:bg-teal-700 disabled:opacity-50"
+              className="rounded-lg bg-accent px-4 py-2 text-sm font-semibold text-accent-ink hover:bg-accent-hover transition-colors disabled:opacity-50"
             >
               {createComment.isPending ? t('common.loading') : t('comments.submit')}
             </button>
           </div>
         </form>
       ) : (
-        <p className="mb-6 text-sm text-gray-500">
-          <Link to="/login" className="text-teal-600 hover:underline">
+        <p className="mb-6 text-sm text-muted">
+          <Link to="/login" className="font-semibold text-accent hover:underline">
             {t('common.login')}
           </Link>{' '}
           {t('comments.signInPrompt')}
@@ -113,9 +113,9 @@ export default function CommentsSection({ postId }) {
       )}
 
       {isLoading ? (
-        <p className="text-sm text-gray-500">{t('common.loading')}</p>
+        <p className="text-sm text-muted">{t('common.loading')}</p>
       ) : comments.length === 0 ? (
-        <p className="text-sm text-gray-500">{t('comments.empty')}</p>
+        <p className="text-sm text-muted">{t('comments.empty')}</p>
       ) : (
         <ul className="space-y-4">
           {comments.map((c) => {
@@ -126,7 +126,7 @@ export default function CommentsSection({ postId }) {
             return (
               <li
                 key={c.id}
-                className="flex gap-3 p-3 bg-gray-50 dark:bg-gray-800/50 rounded"
+                className="flex gap-3 rounded-xl border border-border bg-surface-2 p-3"
               >
                 <Link to={`/profile/${c.author_id}`} className="flex-shrink-0">
                   {author?.avatar_url ? (
@@ -136,16 +136,16 @@ export default function CommentsSection({ postId }) {
                       className="w-9 h-9 rounded-full object-cover"
                     />
                   ) : (
-                    <span className="w-9 h-9 rounded-full bg-gray-300 dark:bg-gray-600 flex items-center justify-center text-sm">
+                    <span className="flex h-9 w-9 items-center justify-center rounded-full bg-accent-soft text-sm font-semibold text-accent">
                       {authorName[0]?.toUpperCase()}
                     </span>
                   )}
                 </Link>
                 <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2 text-sm text-gray-500 mb-1">
+                  <div className="mb-1 flex items-center gap-2 text-sm text-muted">
                     <Link
                       to={`/profile/${c.author_id}`}
-                      className="font-medium text-gray-700 dark:text-gray-200 hover:underline"
+                      className="font-medium text-ink hover:underline"
                     >
                       @{author?.username || '?'}
                     </Link>
@@ -160,7 +160,7 @@ export default function CommentsSection({ postId }) {
                         <button
                           type="button"
                           onClick={() => startEdit(c)}
-                          className="text-gray-600 hover:text-teal-600 dark:text-gray-300"
+                          className="text-muted hover:text-accent transition-colors"
                         >
                           {t('common.edit')}
                         </button>
@@ -173,7 +173,7 @@ export default function CommentsSection({ postId }) {
                             }
                           }}
                           disabled={deleteComment.isPending}
-                          className="text-red-500 hover:text-red-700"
+                          className="text-down hover:underline"
                         >
                           {t('common.delete')}
                         </button>
@@ -188,13 +188,13 @@ export default function CommentsSection({ postId }) {
                         onChange={(e) => setEditValue(e.target.value)}
                         maxLength={MAX_COMMENT_LENGTH}
                         aria-label={t('common.edit')}
-                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-800"
+                        className="w-full rounded-lg border border-border bg-surface px-3 py-2 text-ink placeholder:text-muted focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/30"
                       />
                       <div className="mt-2 flex gap-2 justify-end">
                         <button
                           type="button"
                           onClick={cancelEdit}
-                          className="px-3 py-1 text-sm border border-gray-300 dark:border-gray-600 rounded hover:bg-gray-50 dark:hover:bg-gray-700"
+                          className="rounded-lg border border-border px-3 py-1 text-sm hover:bg-surface-2 transition-colors"
                         >
                           {t('common.cancel')}
                         </button>
@@ -202,14 +202,14 @@ export default function CommentsSection({ postId }) {
                           type="button"
                           onClick={() => saveEdit(c)}
                           disabled={updateComment.isPending || !editValue.trim()}
-                          className="px-3 py-1 text-sm bg-teal-600 text-white rounded hover:bg-teal-700 disabled:opacity-50"
+                          className="rounded-lg bg-accent px-3 py-1 text-sm font-semibold text-accent-ink hover:bg-accent-hover transition-colors disabled:opacity-50"
                         >
                           {updateComment.isPending ? t('common.loading') : t('common.save')}
                         </button>
                       </div>
                     </div>
                   ) : (
-                    <p className="text-gray-800 dark:text-gray-200 whitespace-pre-wrap break-words">
+                    <p className="whitespace-pre-wrap break-words text-ink">
                       {c.body}
                     </p>
                   )}
@@ -220,7 +220,7 @@ export default function CommentsSection({ postId }) {
                       disabled={!user}
                       aria-label={user ? t('comments.reply') : t('comments.signInToReply')}
                       title={!user ? t('comments.signInToReply') : undefined}
-                      className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-teal-600 rounded px-1.5 py-0.5 transition-colors disabled:cursor-not-allowed disabled:hover:text-gray-500"
+                      className="inline-flex items-center gap-1 rounded px-1.5 py-0.5 text-sm text-muted transition-colors hover:text-accent disabled:cursor-not-allowed disabled:hover:text-muted"
                     >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -260,11 +260,11 @@ export default function CommentsSection({ postId }) {
                         : t('comments.signInToLike')
                     }
                     title={!user ? t('comments.signInToLike') : undefined}
-                    className={`inline-flex flex-col items-center gap-0.5 text-sm rounded px-1.5 py-1 transition-colors ${
+                    className={`inline-flex flex-col items-center gap-0.5 rounded px-1.5 py-1 text-sm transition-colors ${
                       c.liked_by_me
-                        ? 'text-red-500'
-                        : 'text-gray-500 hover:text-red-500'
-                    } disabled:cursor-not-allowed disabled:hover:text-gray-500`}
+                        ? 'text-down'
+                        : 'text-muted hover:text-down'
+                    } disabled:cursor-not-allowed disabled:hover:text-muted`}
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"

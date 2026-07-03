@@ -2,6 +2,16 @@ import * as yup from 'yup'
 
 export const MAX_IMAGE_BYTES = 5 * 1024 * 1024
 export const ALLOWED_IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/webp']
+export const MAX_IMAGES = 6
+
+// Validates a single picked file. Returns a translated error message, or null
+// when the file is acceptable. Shared by the create and edit image pickers,
+// which manage their selections in local state rather than through the schema.
+export function imageFileError(file, t) {
+  if (!ALLOWED_IMAGE_TYPES.includes(file.type)) return t('post.imageInvalidType')
+  if (file.size > MAX_IMAGE_BYTES) return t('post.imageTooLarge')
+  return null
+}
 
 export const postFormSchema = (t) =>
   yup.object({
@@ -25,16 +35,4 @@ export const postFormSchema = (t) =>
       .number()
       .typeError(t('post.categoryRequired'))
       .required(t('post.categoryRequired')),
-    image: yup
-      .mixed()
-      .test('type', t('post.imageInvalidType'), (fileList) => {
-        const f = fileList?.[0]
-        if (!f) return true
-        return ALLOWED_IMAGE_TYPES.includes(f.type)
-      })
-      .test('size', t('post.imageTooLarge'), (fileList) => {
-        const f = fileList?.[0]
-        if (!f) return true
-        return f.size <= MAX_IMAGE_BYTES
-      }),
   })

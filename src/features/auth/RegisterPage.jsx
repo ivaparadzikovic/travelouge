@@ -5,9 +5,10 @@ import { useTranslation } from 'react-i18next'
 import { useRegister, useGoogleLogin } from '../../api/auth'
 import { useDocumentTitle } from '../../utils/useDocumentTitle'
 import Field from '../../components/Field'
+import GoogleButton from './components/GoogleButton'
 import { registerFormSchema } from './form/registerFormSchema'
 
-const inputClass = 'w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-800'
+const inputClass = 'w-full rounded-lg border border-border bg-surface px-3 py-2 text-ink placeholder:text-muted focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/30'
 
 export default function Register() {
   const { t } = useTranslation()
@@ -27,10 +28,16 @@ export default function Register() {
   }
 
   return (
-    <div className="max-w-md mx-auto mt-10">
-      <h1 className="text-2xl font-bold mb-6">{t('auth.registerTitle')}</h1>
+    <div className="mx-auto mt-10 max-w-sm">
+      <div className="rounded-2xl border border-border bg-surface p-6 shadow-[0_10px_30px_-18px_rgba(20,24,44,0.35)]">
+        <div className="mb-1 text-center font-display text-base font-bold text-accent">
+          {t('common.appName')}
+        </div>
+        <h1 className="mb-5 text-center font-display text-xl font-bold text-ink">
+          {t('auth.registerTitle')}
+        </h1>
 
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         <Field label={t('auth.username')} error={errors.username?.message}>
           <input
             type="text"
@@ -67,30 +74,24 @@ export default function Register() {
           />
         </Field>
 
-        <button
-          type="submit"
-          disabled={registerMutation.isPending}
-          className="w-full py-2 bg-teal-600 text-white rounded hover:bg-teal-700 disabled:opacity-50"
-        >
-          {registerMutation.isPending ? t('common.loading') : t('auth.registerTitle')}
-        </button>
-      </form>
+          <button
+            type="submit"
+            disabled={registerMutation.isPending}
+            className="w-full rounded-lg bg-accent py-2.5 text-sm font-semibold text-accent-ink hover:bg-accent-hover transition-colors disabled:opacity-50"
+          >
+            {registerMutation.isPending ? t('common.loading') : t('auth.registerTitle')}
+          </button>
+        </form>
 
-      <div className="mt-4">
-        <button
-          onClick={() => googleLogin.mutate()}
-          className="w-full py-2 border border-gray-300 dark:border-gray-600 rounded hover:bg-gray-50 dark:hover:bg-gray-800"
-        >
-          {t('auth.googleLogin')}
-        </button>
+        <GoogleButton onClick={() => googleLogin.mutate()} disabled={googleLogin.isPending} />
+
+        <p className="mt-4 text-center text-sm text-muted">
+          {t('auth.hasAccount')}{' '}
+          <Link to="/login" className="font-semibold text-accent hover:underline">
+            {t('common.login')}
+          </Link>
+        </p>
       </div>
-
-      <p className="mt-4 text-sm text-center text-gray-600 dark:text-gray-400">
-        {t('auth.hasAccount')}{' '}
-        <Link to="/login" className="text-teal-600 hover:underline">
-          {t('common.login')}
-        </Link>
-      </p>
     </div>
   )
 }

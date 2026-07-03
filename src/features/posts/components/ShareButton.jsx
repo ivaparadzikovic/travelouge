@@ -130,7 +130,7 @@ export default function ShareButton({ url, shareUrl, title }) {
   }
 
   return (
-    <div ref={rootRef} className="relative inline-block">
+    <div ref={rootRef} className="relative inline-flex items-center">
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
@@ -154,7 +154,7 @@ export default function ShareButton({ url, shareUrl, title }) {
               type="button"
               role="menuitem"
               onClick={() => openIntent(n.href)}
-              className="w-full flex items-center gap-3 px-3 py-2 text-sm text-left text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+              className="flex w-full items-center gap-3 px-3 py-2 text-left text-sm text-ink hover:bg-surface-2 transition-colors"
             >
               {n.icon}
               <span>{n.label}</span>

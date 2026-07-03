@@ -20,7 +20,7 @@ export default function PopularDestinations() {
             <li key={d.country_id}>
               <Link
                 to={`/browse?country=${d.code}`}
-                className="inline-flex items-center gap-2 rounded-full border border-border bg-surface py-2 pl-2 pr-3.5 transition hover:-translate-y-0.5 hover:border-accent"
+                className="group inline-flex items-center gap-2 rounded-full border border-accent/60 bg-surface py-2 pl-2 pr-3.5 transition hover:-translate-y-0.5 hover:border-accent hover:bg-accent-soft dark:border-border"
               >
                 <img
                   src={`https://flagcdn.com/w40/${code}.png`}
@@ -31,7 +31,7 @@ export default function PopularDestinations() {
                   loading="lazy"
                   className="h-4 w-6 rounded-sm object-cover"
                 />
-                <span className="font-display text-[13px] font-semibold text-ink">
+                <span className="font-display text-[13px] font-semibold text-ink transition-colors group-hover:text-accent">
                   {t(`countries.${d.code}`, { defaultValue: d.name })}
                 </span>
                 <span className="text-xs text-muted">{d.post_count}</span>
