@@ -1,3 +1,4 @@
+import { useRef } from 'react'
 import { useParams } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { usePost, postImageList } from '../../api/posts'
@@ -19,6 +20,9 @@ export default function PostDetail() {
   useDocumentTitle(post?.title)
   usePostViewCounter(id)
   const editor = usePostEditor(post)
+  const commentsRef = useRef<HTMLDivElement>(null)
+  const scrollToComments = () =>
+    commentsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
 
   if (isLoading) return <div className="text-muted">{t('common.loading')}</div>
   if (isError) return <div className="text-down">{error?.message}</div>
@@ -48,9 +52,11 @@ export default function PostDetail() {
         </>
       )}
 
-      <PostFooterActions post={post} />
+      <PostFooterActions post={post} onCommentsClick={scrollToComments} />
 
-      <CommentsSection postId={post.id} />
+      <div ref={commentsRef}>
+        <CommentsSection postId={post.id} />
+      </div>
     </article>
   )
 }

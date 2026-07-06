@@ -5,13 +5,14 @@ import type { PostWithRelations } from '../../../models'
 
 interface PostFooterActionsProps {
   post: PostWithRelations
+  onCommentsClick?: () => void
 }
 
-export default function PostFooterActions({ post }: PostFooterActionsProps) {
+export default function PostFooterActions({ post, onCommentsClick }: PostFooterActionsProps) {
   const { t } = useTranslation()
 
   return (
-    <div className="mt-8 flex items-center gap-4 text-sm text-muted border-t border-border pt-4">
+    <div className="mt-8 flex items-center gap-4 rounded-xl border border-accent bg-surface-2 px-4 py-3 text-sm text-muted dark:border-border">
       <VoteControls
         postId={post.id}
         authorId={post.author_id}
@@ -19,7 +20,13 @@ export default function PostFooterActions({ post }: PostFooterActionsProps) {
         downvoteCount={post.downvote_count}
       />
       <span>·</span>
-      <span>{post.comment_count} {t('post.comments').toLowerCase()}</span>
+      <button
+        type="button"
+        onClick={onCommentsClick}
+        className="rounded transition-colors hover:text-accent hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+      >
+        {post.comment_count} {t('post.comments').toLowerCase()}
+      </button>
       <span>·</span>
       <ShareButton
         url={`${window.location.origin}/post/${post.id}`}
