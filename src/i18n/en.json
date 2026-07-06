@@ -200,7 +200,14 @@
     "noPostsYet": "No posts yet",
     "userNotFound": "User not found",
     "joined": "joined {{date}}",
-    "stats": { "reputation": "reputation", "posts": "posts", "countries": "countries" },
+    "stats": {
+      "reputation_one": "reputation",
+      "reputation_other": "reputation",
+      "posts_one": "post",
+      "posts_other": "posts",
+      "countries_one": "country",
+      "countries_other": "countries"
+    },
     "badgesLegend": "All badges",
     "badgeLocked": "Locked — not earned yet",
     "badges": {

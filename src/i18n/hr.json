@@ -201,7 +201,17 @@
     "noPostsYet": "Još nema objava",
     "userNotFound": "Korisnik nije pronađen",
     "joined": "pridružen/a {{date}}",
-    "stats": { "reputation": "reputacija", "posts": "objave", "countries": "zemlje" },
+    "stats": {
+      "reputation_one": "reputacija",
+      "reputation_few": "reputacije",
+      "reputation_other": "reputacija",
+      "posts_one": "objava",
+      "posts_few": "objave",
+      "posts_other": "objava",
+      "countries_one": "zemlja",
+      "countries_few": "zemlje",
+      "countries_other": "zemalja"
+    },
     "badgesLegend": "Sve značke",
     "badgeLocked": "Zaključano — još nije osvojeno",
     "badges": {

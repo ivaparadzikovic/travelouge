@@ -17,7 +17,9 @@ export function NotificationBell({ open, unreadCount, onToggle }: NotificationBe
       aria-label={t('notifications.open')}
       aria-expanded={open}
       onClick={onToggle}
-      className="relative p-1.5 text-muted hover:bg-surface-2 rounded"
+      className={`relative rounded p-1.5 transition-colors hover:bg-surface-2 ${
+        unreadCount > 0 ? 'text-accent' : 'text-muted'
+      }`}
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"

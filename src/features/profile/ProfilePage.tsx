@@ -15,13 +15,21 @@ export default function Profile() {
   useDocumentTitle(profile?.display_name || (profile?.username ? `@${profile.username}` : null))
   const { data: posts } = useUserPosts(id)
   const isOwnProfile = currentUser?.id === id
+  const countriesCount = new Set(
+    (posts ?? []).map((p) => p.countries?.code).filter(Boolean),
+  ).size
 
   if (isLoading) return <div>{t('common.loading')}</div>
   if (!profile) return <div>{t('profile.userNotFound')}</div>
 
   return (
     <div className="max-w-2xl mx-auto">
-      <ProfileHeader profile={profile} isOwnProfile={isOwnProfile} postsCount={posts?.length || 0} />
+      <ProfileHeader
+        profile={profile}
+        isOwnProfile={isOwnProfile}
+        postsCount={posts?.length || 0}
+        countriesCount={countriesCount}
+      />
       <ProfileTabs posts={posts} />
     </div>
   )

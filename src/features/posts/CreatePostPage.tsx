@@ -16,7 +16,7 @@ import { useImagePicker } from './hooks/useImagePicker'
 import { useLocalizedOptions } from './hooks/useLocalizedOptions'
 import { postFormSchema } from './form/postFormSchema'
 import type { PostFormValues } from './form/postFormSchema'
-import { inputClass } from '../../components/formStyles'
+import { postInputClass } from '../../components/formStyles'
 
 export default function CreatePost() {
   const { t } = useTranslation()
@@ -78,11 +78,11 @@ export default function CreatePost() {
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         <Field label={t('post.titleLabel')} error={errors.title?.message}>
-          <input type="text" {...register('title')} className={inputClass} />
+          <input type="text" {...register('title')} className={postInputClass} />
         </Field>
 
         <Field label={t('post.bodyLabel')} error={errors.body?.message}>
-          <textarea rows={10} {...register('body')} className={inputClass} />
+          <textarea rows={10} {...register('body')} className={postInputClass} />
         </Field>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -96,7 +96,7 @@ export default function CreatePost() {
               }}
               placeholder={t('post.selectCountry')}
               disabled={countriesLoading}
-              triggerClass={inputClass}
+              triggerClass={postInputClass}
             />
           </Field>
 
@@ -110,7 +110,7 @@ export default function CreatePost() {
               }}
               placeholder={t('post.selectCategory')}
               disabled={categoriesLoading}
-              triggerClass={inputClass}
+              triggerClass={postInputClass}
             />
           </Field>
         </div>

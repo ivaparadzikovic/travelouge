@@ -23,7 +23,7 @@ export function Avatar({
     <img src={url} alt="" className={`${boxClass} rounded-full object-cover`} />
   ) : (
     <span
-      className={`${boxClass} rounded-full bg-gray-300 dark:bg-gray-600 flex items-center justify-center ${initialsClassName}`}
+      className={`${boxClass} rounded-full bg-linear-to-br from-accent to-accent-2 font-display font-semibold text-white flex items-center justify-center ${initialsClassName}`}
     >
       {initial}
     </span>

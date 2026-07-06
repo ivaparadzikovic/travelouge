@@ -1,11 +1,10 @@
 import { useQuery, useInfiniteQuery } from '@tanstack/react-query'
 import { supabase } from '../supabase'
 import { postKeys, type BrowsePostsFilters } from '../queryKeys'
-import type { PostWithRelations, PostWithCountryAndCategory } from '../../models'
+import type { PostWithRelations } from '../../models'
 
 const POSTS_PER_PAGE = 10
 const POST_SELECT = '*, profiles:author_id(username, display_name, avatar_url), countries(name, code), categories(name, slug)'
-const USER_POST_SELECT = '*, countries(name, code), categories(name, slug)'
 
 // Shortest search query useBrowsePosts will actually filter on; shorter
 // input returns the unfiltered list instead of running an ilike search.
@@ -68,12 +67,12 @@ export function useUserPosts(userId?: string) {
     queryFn: async () => {
       const { data, error } = await supabase
         .from('posts')
-        .select(USER_POST_SELECT)
+        .select(POST_SELECT)
         .eq('author_id', userId!)
         .order('created_at', { ascending: false })
       if (error) throw error
       // Embedded-select inference limitation: see usePosts above.
-      return (data ?? []) as unknown as PostWithCountryAndCategory[]
+      return (data ?? []) as unknown as PostWithRelations[]
     },
     enabled: !!userId,
   })

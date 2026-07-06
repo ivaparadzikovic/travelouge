@@ -42,7 +42,7 @@ export default function PostDetail() {
 
           <PostGallery images={postImageList(post)} alt={post.title} />
 
-          <div className="prose dark:prose-invert whitespace-pre-wrap text-gray-800 dark:text-gray-200">
+          <div className="prose dark:prose-invert whitespace-pre-wrap text-ink">
             {post.body}
           </div>
         </>

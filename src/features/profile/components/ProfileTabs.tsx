@@ -1,9 +1,9 @@
 import { useTranslation } from 'react-i18next'
 import { ProfilePostList } from './ProfilePostList'
-import type { ProfilePostListItem } from './ProfilePostList'
+import type { PostWithRelations } from '../../../models'
 
 interface ProfileTabsProps {
-  posts: ProfilePostListItem[] | undefined
+  posts: PostWithRelations[] | undefined
 }
 
 export function ProfileTabs({ posts }: ProfileTabsProps) {
@@ -11,8 +11,8 @@ export function ProfileTabs({ posts }: ProfileTabsProps) {
 
   return (
     <div>
-      <div className="flex gap-4 mb-4 border-b border-border">
-        <span className="pb-2 border-b-2 border-accent text-accent font-medium">
+      <div className="flex gap-5 mb-4 border-b border-border">
+        <span className="pb-[9px] border-b-2 border-accent text-[13px] font-semibold text-accent">
           {t('profile.posts')}
         </span>
       </div>
