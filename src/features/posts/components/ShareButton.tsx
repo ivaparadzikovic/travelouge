@@ -1,6 +1,8 @@
-import { useEffect, useRef, useState } from 'react'
+import { useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import toast from 'react-hot-toast'
+import { useClickOutside } from '../../../hooks/useClickOutside'
+import { useEscapeKey } from '../../../hooks/useEscapeKey'
 
 interface ShareButtonProps {
   url: string
@@ -62,21 +64,10 @@ export default function ShareButton({ url, shareUrl, title }: ShareButtonProps) 
   const rootRef = useRef<HTMLDivElement>(null)
   const canNativeShare = typeof navigator !== 'undefined' && typeof navigator.share === 'function'
 
-  useEffect(() => {
-    if (!open) return
-    function onClick(e: MouseEvent) {
-      if (rootRef.current && !rootRef.current.contains(e.target as Node)) setOpen(false)
-    }
-    function onKey(e: KeyboardEvent) {
-      if (e.key === 'Escape') setOpen(false)
-    }
-    document.addEventListener('mousedown', onClick)
-    document.addEventListener('keydown', onKey)
-    return () => {
-      document.removeEventListener('mousedown', onClick)
-      document.removeEventListener('keydown', onKey)
-    }
-  }, [open])
+  useClickOutside(rootRef, () => setOpen(false), open)
+  useEscapeKey(() => {
+    if (open) setOpen(false)
+  })
 
   // Crawler-targeted networks (FB/X/WhatsApp/Telegram) unfurl previews
   // server-side, so they must point at the OG-tagged share endpoint when

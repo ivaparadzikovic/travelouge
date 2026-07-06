@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useForm } from 'react-hook-form'
+import toast from 'react-hot-toast'
 import { useUpdateProfile } from '../../../api/profile'
 import type { ProfileWithBadges } from '../../../models'
 import { useAvatarUpload } from '../hooks/useAvatarUpload'
@@ -17,6 +18,20 @@ const BADGE_EMOJI: Record<string, string> = {
 }
 
 const ALL_BADGE_ICONS = ['pencil', 'globe', 'star', 'message-circle', 'award']
+
+// Shared recipe for the hover/focus tooltip popovers below (positioning +
+// width are appended per use). Inverted surface: dark-on-light flips with theme.
+const tooltipPanelClass =
+  'pointer-events-none absolute rounded shadow-lg bg-ink text-surface text-xs opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity z-20'
+
+function InfoIcon({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" className={className} fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true">
+      <circle cx="12" cy="12" r="9" />
+      <path strokeLinecap="round" strokeLinejoin="round" d="M12 11v5M12 7.75v.5" />
+    </svg>
+  )
+}
 
 interface ProfileEditFormValues {
   display_name: string
@@ -56,7 +71,10 @@ export function ProfileHeader({ profile, isOwnProfile, postsCount }: ProfileHead
 
   const onSubmit = (data: ProfileEditFormValues) => {
     updateProfile.mutate({ id: profile.id, ...data }, {
-      onSuccess: () => setEditing(false),
+      onSuccess: () => {
+        toast.success(t('profile.profileUpdated'))
+        setEditing(false)
+      },
     })
   }
 
@@ -71,7 +89,7 @@ export function ProfileHeader({ profile, isOwnProfile, postsCount }: ProfileHead
         />
         <div>
           <h1 className="text-2xl font-bold">{profile.display_name || profile.username}</h1>
-          <p className="text-gray-500">@{profile.username}</p>
+          <p className="text-muted">@{profile.username}</p>
           {isOwnProfile && (
             <div className="flex gap-2 mt-2">
               <input
@@ -85,7 +103,7 @@ export function ProfileHeader({ profile, isOwnProfile, postsCount }: ProfileHead
                 type="button"
                 onClick={() => fileInputRef.current?.click()}
                 disabled={isUploading || isRemoving}
-                className="text-sm text-teal-600 hover:underline disabled:opacity-50 whitespace-nowrap"
+                className="text-sm text-accent hover:underline disabled:opacity-50 whitespace-nowrap"
               >
                 {isUploading
                   ? t('profile.uploadingAvatar')
@@ -98,7 +116,7 @@ export function ProfileHeader({ profile, isOwnProfile, postsCount }: ProfileHead
                   type="button"
                   onClick={handleAvatarRemove}
                   disabled={isUploading || isRemoving}
-                  className="text-sm text-red-600 hover:underline disabled:opacity-50 whitespace-nowrap"
+                  className="text-sm text-down hover:underline disabled:opacity-50 whitespace-nowrap"
                 >
                   {t('profile.removeAvatar')}
                 </button>
@@ -108,20 +126,17 @@ export function ProfileHeader({ profile, isOwnProfile, postsCount }: ProfileHead
         </div>
       </div>
 
-      <div className="flex gap-4 mb-4 text-sm text-gray-600 dark:text-gray-400">
+      <div className="flex gap-4 mb-4 text-sm text-muted">
         <span
           tabIndex={0}
           className="relative group focus:outline-none inline-flex items-center gap-1 cursor-help"
           aria-label={t('profile.reputationExplain.title')}
         >
           {t('profile.reputation')}: <strong>{profile.reputation}</strong>
-          <svg viewBox="0 0 24 24" className="w-4 h-4 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true">
-            <circle cx="12" cy="12" r="9" />
-            <path strokeLinecap="round" strokeLinejoin="round" d="M12 11v5M12 7.75v.5" />
-          </svg>
+          <InfoIcon className="w-4 h-4 text-muted" />
           <div
             role="tooltip"
-            className="pointer-events-none absolute left-0 top-full mt-2 w-72 px-3 py-2 rounded shadow-lg bg-gray-900 text-white dark:bg-gray-100 dark:text-gray-900 text-xs opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity z-20"
+            className={`${tooltipPanelClass} left-0 top-full mt-2 w-72 px-3 py-2`}
           >
             <div className="font-semibold mb-1.5">{t('profile.reputationExplain.title')}</div>
             <ul className="space-y-0.5 font-normal">
@@ -136,7 +151,7 @@ export function ProfileHeader({ profile, isOwnProfile, postsCount }: ProfileHead
       </div>
 
       {profile.bio && !editing && (
-        <p className="text-gray-700 dark:text-gray-300 mb-4">{profile.bio}</p>
+        <p className="text-ink mb-4">{profile.bio}</p>
       )}
 
       {profile.user_badges?.length > 0 && (
@@ -146,15 +161,12 @@ export function ProfileHeader({ profile, isOwnProfile, postsCount }: ProfileHead
             className="relative group focus:outline-none"
             aria-label={t('profile.badgesLegend')}
           >
-            <span className="inline-flex items-center justify-center w-5 h-5 text-gray-500 dark:text-gray-400 cursor-help">
-              <svg viewBox="0 0 24 24" className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true">
-                <circle cx="12" cy="12" r="9" />
-                <path strokeLinecap="round" strokeLinejoin="round" d="M12 11v5M12 7.75v.5" />
-              </svg>
+            <span className="inline-flex items-center justify-center w-5 h-5 text-muted cursor-help">
+              <InfoIcon className="w-5 h-5" />
             </span>
             <div
               role="tooltip"
-              className="pointer-events-none absolute left-0 top-full mt-2 w-72 px-3 py-2 rounded shadow-lg bg-gray-900 text-white dark:bg-gray-100 dark:text-gray-900 text-xs opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity z-20"
+              className={`${tooltipPanelClass} left-0 top-full mt-2 w-72 px-3 py-2`}
             >
               <div className="font-semibold mb-1.5">{t('profile.badgesLegend')}</div>
               <ul className="space-y-1">
@@ -195,7 +207,7 @@ export function ProfileHeader({ profile, isOwnProfile, postsCount }: ProfileHead
                 </span>
                 <div
                   role="tooltip"
-                  className="pointer-events-none absolute left-1/2 -translate-x-1/2 bottom-full mb-2 w-56 px-3 py-2 rounded shadow-lg bg-gray-900 text-white dark:bg-gray-100 dark:text-gray-900 text-xs opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity z-20"
+                  className={`${tooltipPanelClass} left-1/2 -translate-x-1/2 bottom-full mb-2 w-56 px-3 py-2`}
                 >
                   <div className="font-semibold mb-0.5 flex items-center gap-1">
                     {emoji && <span aria-hidden="true">{emoji}</span>}
@@ -212,7 +224,7 @@ export function ProfileHeader({ profile, isOwnProfile, postsCount }: ProfileHead
       {isOwnProfile && !editing && (
         <button
           onClick={() => setEditing(true)}
-          className="px-4 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded hover:bg-gray-50 dark:hover:bg-gray-800"
+          className="px-4 py-2 text-sm border border-border rounded hover:bg-surface-2"
         >
           {t('common.edit')} {t('common.profile')}
         </button>
@@ -223,28 +235,28 @@ export function ProfileHeader({ profile, isOwnProfile, postsCount }: ProfileHead
           <Field label={t('profile.displayName')}>
             <input
               {...register('display_name')}
-              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-800"
+              className="w-full px-3 py-2 border border-border rounded bg-surface"
             />
           </Field>
           <Field label={t('profile.bio')}>
             <textarea
               {...register('bio')}
               rows={3}
-              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-800"
+              className="w-full px-3 py-2 border border-border rounded bg-surface"
             />
           </Field>
           <div className="flex gap-2">
             <button
               type="submit"
               disabled={updateProfile.isPending}
-              className="px-4 py-2 bg-teal-600 text-white rounded hover:bg-teal-700 disabled:opacity-50"
+              className="px-4 py-2 bg-accent text-accent-ink rounded hover:bg-accent-hover disabled:opacity-50"
             >
               {t('common.save')}
             </button>
             <button
               type="button"
               onClick={() => setEditing(false)}
-              className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded hover:bg-gray-50 dark:hover:bg-gray-800"
+              className="px-4 py-2 border border-border rounded hover:bg-surface-2"
             >
               {t('common.cancel')}
             </button>

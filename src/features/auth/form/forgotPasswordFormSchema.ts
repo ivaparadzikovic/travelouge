@@ -7,7 +7,7 @@ export const forgotPasswordFormSchema = (t: TFunction) =>
     email: yup
       .string()
       .required(t('auth.emailRequired'))
-      .email(t('auth.emailRequired')),
+      .email(t('auth.emailInvalid')),
   })
 
 export type ForgotPasswordFormValues = InferType<

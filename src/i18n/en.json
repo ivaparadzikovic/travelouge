@@ -15,13 +15,13 @@
     "cancel": "Cancel",
     "delete": "Delete",
     "edit": "Edit",
-    "submit": "Submit"
+    "toggleTheme": "Toggle theme",
+    "toggleLanguage": "Toggle language"
   },
   "home": {
     "newest": "Newest",
     "popular": "Popular",
     "top": "Top Rated",
-    "by": "by",
     "loadMore": "Load more",
     "popularDestinations": "Popular destinations",
     "postsCount_one": "post",
@@ -46,7 +46,6 @@
     "bodyLabel": "Body",
     "countryLabel": "Country",
     "categoryLabel": "Category",
-    "imageLabel": "Image (optional)",
     "selectCountry": "Select a country",
     "selectCategory": "Select a category",
     "titleRequired": "Title is required",
@@ -61,18 +60,10 @@
     "imageInvalidType": "Image must be a JPEG, PNG, or WebP",
     "submitLabel": "Publish",
     "uploading": "Uploading image...",
-    "chooseImage": "Choose image",
-    "noImageChosen": "No image chosen",
     "removeImage": "Remove",
-    "replaceImage": "Replace",
-    "addImage": "Add image",
-    "imageWillBeRemoved": "Image will be removed when you save",
-    "undo": "Undo",
-    "createSubtitle": "Share a route, a tip, or a story from the road.",
     "photosLabel": "Photos",
     "optional": "optional",
     "dropzoneHint": "Drag a photo here, or browse",
-    "dropzoneSubhint": "No photo? That's fine — posts are text-first.",
     "addMorePhotos": "Add more photos",
     "imageTooMany": "You can add up to {{count}} photos",
     "imageLimitReached": "Maximum of {{count}} photos reached",
@@ -89,6 +80,7 @@
     "confirmPassword": "Confirm Password",
     "passwordsDontMatch": "Passwords do not match",
     "emailRequired": "Email is required",
+    "emailInvalid": "Enter a valid email address",
     "confirmPasswordRequired": "Please confirm your password",
     "passwordRequired": "Password is required",
     "passwordTooShort": "Password must be at least 8 characters",
@@ -193,6 +185,7 @@
     "avatarInvalidType": "Image must be a JPEG, PNG, or WebP",
     "avatarUpdated": "Profile picture updated",
     "avatarRemoved": "Profile picture removed",
+    "profileUpdated": "Profile updated",
     "displayName": "Display Name",
     "bio": "Bio",
     "reputation": "Reputation",
@@ -219,8 +212,7 @@
     }
   },
   "browse": {
-    "allCountries": "All countries",
-    "allCategories": "All categories"
+    "allCountries": "All countries"
   },
   "vote": {
     "upvote": "Upvote",
@@ -237,13 +229,11 @@
     "title": "Page not found",
     "goHome": "Go home"
   },
-  "search": {
-    "resultsFor": "Results for",
-    "minChars": "Type at least 2 characters."
-  },
   "comments": {
     "placeholder": "Write a comment...",
     "submit": "Post comment",
+    "added": "Comment added",
+    "deleted": "Comment deleted",
     "empty": "No comments yet. Be the first.",
     "signInPrompt": "to leave a comment",
     "bodyRequired": "Comment cannot be empty",
@@ -259,7 +249,6 @@
     "title": "Notifications",
     "empty": "No notifications yet",
     "markAllRead": "Mark all as read",
-    "viewAll": "View all",
     "upvote": "upvoted your post",
     "downvote": "downvoted your post",
     "comment": "commented on your post",

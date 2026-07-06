@@ -67,10 +67,10 @@ export default function CommentsSection({ postId }: CommentsSectionProps) {
 
   const renderCommentsList = () => {
     if (isLoading) {
-      return <p className="text-sm text-gray-500">{t('common.loading')}</p>
+      return <p className="text-sm text-muted">{t('common.loading')}</p>
     }
     if (comments.length === 0) {
-      return <p className="text-sm text-gray-500">{t('comments.empty')}</p>
+      return <p className="text-sm text-muted">{t('comments.empty')}</p>
     }
     return (
       <ul className="space-y-4">
@@ -99,7 +99,7 @@ export default function CommentsSection({ postId }: CommentsSectionProps) {
   }
 
   return (
-    <section className="mt-10 border-t border-gray-200 dark:border-gray-700 pt-6">
+    <section className="mt-10 border-t border-border pt-6">
       <h2 className="text-xl font-semibold mb-4">
         {t('post.comments')} ({comments.length})
       </h2>

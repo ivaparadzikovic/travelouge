@@ -10,8 +10,7 @@ import Field from '../../components/Field'
 import GoogleButton from './components/GoogleButton'
 import { loginFormSchema } from './form/loginFormSchema'
 import type { LoginFormValues } from './form/loginFormSchema'
-
-const inputClass = 'w-full rounded-lg border border-border bg-surface px-3 py-2 text-ink placeholder:text-muted focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/30'
+import { inputClass, submitButtonClass } from '../../components/formStyles'
 
 export default function Login() {
   const { t } = useTranslation()
@@ -78,7 +77,7 @@ export default function Login() {
           <button
             type="submit"
             disabled={login.isPending}
-            className="w-full rounded-lg bg-accent py-2.5 text-sm font-semibold text-accent-ink hover:bg-accent-hover transition-colors disabled:opacity-50"
+            className={submitButtonClass}
           >
             {login.isPending ? t('common.loading') : t('auth.loginTitle')}
           </button>

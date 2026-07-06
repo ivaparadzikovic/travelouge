@@ -30,8 +30,8 @@ export default function CommentForm({
 
   if (!user) {
     return (
-      <p className="mb-6 text-sm text-gray-500">
-        <Link to="/login" className="text-teal-600 hover:underline">
+      <p className="mb-6 text-sm text-muted">
+        <Link to="/login" className="text-accent hover:underline">
           {t('common.login')}
         </Link>{' '}
         {t('comments.signInPrompt')}
@@ -51,14 +51,14 @@ export default function CommentForm({
             bodyRegister.ref(el)
             textareaRef.current = el
           }}
-          className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-800"
+          className="w-full px-3 py-2 border border-border rounded bg-surface"
         />
       </Field>
       <div className="mt-2 flex justify-end">
         <button
           type="submit"
           disabled={isSubmitting}
-          className="px-4 py-2 bg-teal-600 text-white rounded hover:bg-teal-700 disabled:opacity-50"
+          className="px-4 py-2 bg-accent text-accent-ink rounded hover:bg-accent-hover disabled:opacity-50"
         >
           {isSubmitting ? t('common.loading') : t('comments.submit')}
         </button>

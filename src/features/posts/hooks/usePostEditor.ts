@@ -1,7 +1,8 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { useForm } from 'react-hook-form'
+import { yupResolver } from '@hookform/resolvers/yup'
 import toast from 'react-hot-toast'
 import {
   useUpdatePost,
@@ -12,20 +13,16 @@ import {
 } from '../../../api/posts'
 import type { PostWithRelations } from '../../../models'
 import { useAuthStore } from '../../../stores/auth'
-import { MAX_IMAGES, imageFileError } from '../constants'
-
-interface PostEditFormValues {
-  title: string
-  body: string
-}
+import { useImagePicker } from './useImagePicker'
+import { postTextSchema } from '../form/postFormSchema'
+import type { PostTextValues } from '../form/postFormSchema'
 
 /**
  * Owns the whole edit lifecycle for a post: entering/leaving edit mode, the
  * multi-image state (existing stored URLs kept + newly picked files pending
- * upload), the react-hook-form instance, and the submit/delete mutations
- * (including storage upload + cleanup). Moved verbatim out of PostDetailPage
- * — every guard/branch/side effect here matches the original inline
- * implementation, upgraded from single- to multi-image per main's spec.
+ * upload, via the shared useImagePicker hook), the react-hook-form instance
+ * (validated by the same title/body schema the create form uses), and the
+ * submit/delete mutations (including storage upload + cleanup).
  */
 export function usePostEditor(post: PostWithRelations | undefined) {
   const { t } = useTranslation()
@@ -37,17 +34,17 @@ export function usePostEditor(post: PostWithRelations | undefined) {
   // Images being edited: `existingImages` are already-stored URLs the user has
   // chosen to keep; `newFiles` are freshly picked File objects to upload on save.
   const [existingImages, setExistingImages] = useState<string[]>([])
-  const [newFiles, setNewFiles] = useState<File[]>([])
+  const {
+    files: newFiles,
+    setFiles: setNewFiles,
+    previews: newPreviews,
+    addFiles,
+    removeFile: removeNewFile,
+  } = useImagePicker(existingImages.length)
   const [uploading, setUploading] = useState(false)
-  const { register, handleSubmit, reset, formState: { errors } } = useForm<PostEditFormValues>()
-
-  const newPreviews = useMemo(
-    () => newFiles.map((f) => URL.createObjectURL(f)),
-    [newFiles],
-  )
-  useEffect(() => {
-    return () => { newPreviews.forEach((url) => URL.revokeObjectURL(url)) }
-  }, [newPreviews])
+  const { register, handleSubmit, reset, formState: { errors } } = useForm<PostTextValues>({
+    resolver: yupResolver(postTextSchema(t)),
+  })
 
   // usePostEditor is a hook, so it must be called unconditionally before
   // PostDetailPage's loading/error/no-post early returns — but every
@@ -73,35 +70,10 @@ export function usePostEditor(post: PostWithRelations | undefined) {
       },
     })
   }
-  const totalImages = existingImages.length + newFiles.length
-  const addFiles = (fileList: FileList) => {
-    const files = Array.from(fileList)
-    if (files.length === 0) return
-    const room = MAX_IMAGES - totalImages
-    if (room <= 0) {
-      toast.error(t('post.imageTooMany', { count: MAX_IMAGES }))
-      return
-    }
-    const accepted: File[] = []
-    for (const f of files) {
-      const err = imageFileError(f, t)
-      if (err) {
-        toast.error(err)
-        continue
-      }
-      accepted.push(f)
-    }
-    if (accepted.length > room) {
-      toast.error(t('post.imageTooMany', { count: MAX_IMAGES }))
-    }
-    setNewFiles((prev) => [...prev, ...accepted.slice(0, room)])
-  }
   const removeExisting = (url: string) =>
     setExistingImages((prev) => prev.filter((u) => u !== url))
-  const removeNewFile = (idx: number) =>
-    setNewFiles((prev) => prev.filter((_, i) => i !== idx))
 
-  const onSubmit = async (data: PostEditFormValues) => {
+  const onSubmit = async (data: PostTextValues) => {
     const title = data.title.trim()
     const body = data.body.trim()
     const originalImages = postImageList(post)

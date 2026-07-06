@@ -72,7 +72,6 @@ export function useCreateComment() {
       // postKeys.all subsumes detail + feed lists, so the comment_count shown
       // on feed cards refreshes too (matches useVote).
       queryClient.invalidateQueries({ queryKey: postKeys.all })
-      toast.success('Comment added')
     },
     onError: (error) => {
       toast.error(error.message)
@@ -112,7 +111,6 @@ export function useDeleteComment() {
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: commentKeys.byPost(variables.postId) })
       queryClient.invalidateQueries({ queryKey: postKeys.all })
-      toast.success('Comment deleted')
     },
     onError: (error) => {
       toast.error(error.message)

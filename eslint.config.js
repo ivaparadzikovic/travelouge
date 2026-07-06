@@ -52,12 +52,6 @@ export default defineConfig([
     },
   },
   {
-    files: ['src/utils/logger.{js,ts}'],
-    rules: {
-      'no-console': 'off',
-    },
-  },
-  {
     files: ['src/**/*.{js,jsx,ts,tsx}'],
     plugins: { boundaries },
     settings: {

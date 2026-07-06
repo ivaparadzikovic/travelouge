@@ -42,19 +42,19 @@ export default function NotificationsDropdown() {
 
   function renderList() {
     if (isLoading) {
-      return <div className="px-3 py-4 text-sm text-gray-500">{t('common.loading')}</div>
+      return <div className="px-3 py-4 text-sm text-muted">{t('common.loading')}</div>
     }
 
     if (notifications.length === 0) {
       return (
-        <div className="px-3 py-6 text-sm text-gray-500 text-center">
+        <div className="px-3 py-6 text-sm text-muted text-center">
           {t('notifications.empty')}
         </div>
       )
     }
 
     return (
-      <ul className="divide-y divide-gray-100 dark:divide-gray-700">
+      <ul className="divide-y divide-border">
         {notifications.map((n) => (
           <NotificationItem key={n.id} notification={n} onSelect={handleSelect} />
         ))}
@@ -67,14 +67,14 @@ export default function NotificationsDropdown() {
       <NotificationBell open={open} unreadCount={unreadCount} onToggle={() => setOpen((v) => !v)} />
 
       {open && (
-        <div className="absolute right-0 mt-2 w-80 max-h-96 overflow-y-auto bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded shadow-lg z-50">
-          <div className="flex items-center justify-between px-3 py-2 border-b border-gray-200 dark:border-gray-700">
+        <div className="absolute right-0 mt-2 w-80 max-h-96 overflow-y-auto bg-surface border border-border rounded shadow-lg z-50">
+          <div className="flex items-center justify-between px-3 py-2 border-b border-border">
             <h3 className="text-sm font-semibold">{t('notifications.title')}</h3>
             {unreadCount > 0 && (
               <button
                 type="button"
                 onClick={() => markAllAsRead.mutate()}
-                className="text-xs text-teal-600 hover:text-teal-800"
+                className="text-xs text-accent hover:text-accent-hover"
               >
                 {t('notifications.markAllRead')}
               </button>

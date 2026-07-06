@@ -52,7 +52,7 @@ export default function Navbar() {
         <div className="flex items-center gap-2">
           <button
             onClick={toggleTheme}
-            aria-label={t('common.toggleTheme', { defaultValue: 'Toggle theme' })}
+            aria-label={t('common.toggleTheme')}
             className={iconBtn}
           >
             {theme === 'dark' ? '☀️' : '🌙'}
@@ -60,7 +60,7 @@ export default function Navbar() {
 
           <button
             onClick={toggleLang}
-            aria-label={t('common.toggleLanguage', { defaultValue: 'Toggle language' })}
+            aria-label={t('common.toggleLanguage')}
             className={`${iconBtn} font-mono`}
           >
             {i18n.language === 'en' ? 'HR' : 'EN'}

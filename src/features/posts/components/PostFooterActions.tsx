@@ -11,7 +11,7 @@ export default function PostFooterActions({ post }: PostFooterActionsProps) {
   const { t } = useTranslation()
 
   return (
-    <div className="mt-8 flex items-center gap-4 text-sm text-gray-500 border-t border-gray-200 dark:border-gray-700 pt-4">
+    <div className="mt-8 flex items-center gap-4 text-sm text-muted border-t border-border pt-4">
       <VoteControls
         postId={post.id}
         authorId={post.author_id}

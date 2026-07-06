@@ -46,15 +46,15 @@ export default function CommentItem({
   const isOwner = currentUserId === c.author_id
 
   return (
-    <li className="flex gap-3 p-3 bg-gray-50 dark:bg-gray-800/50 rounded">
+    <li className="flex gap-3 p-3 bg-surface-2 rounded">
       <Link to={`/profile/${c.author_id}`} className="flex-shrink-0">
         <Avatar url={author?.avatar_url} name={authorName} size="w-9 h-9" initialsClassName="text-sm" />
       </Link>
       <div className="flex-1 min-w-0">
-        <div className="flex items-center gap-2 text-sm text-gray-500 mb-1">
+        <div className="flex items-center gap-2 text-sm text-muted mb-1">
           <Link
             to={`/profile/${c.author_id}`}
-            className="font-medium text-gray-700 dark:text-gray-200 hover:underline"
+            className="font-medium text-ink hover:underline"
           >
             @{author?.username || '?'}
           </Link>
@@ -67,7 +67,7 @@ export default function CommentItem({
               <button
                 type="button"
                 onClick={onStartEdit}
-                className="text-gray-600 hover:text-teal-600 dark:text-gray-300"
+                className="text-muted hover:text-accent"
               >
                 {t('common.edit')}
               </button>
@@ -76,7 +76,7 @@ export default function CommentItem({
                 type="button"
                 onClick={onDelete}
                 disabled={isDeleting}
-                className="text-red-500 hover:text-red-700"
+                className="text-down hover:opacity-80"
               >
                 {t('common.delete')}
               </button>
@@ -91,13 +91,13 @@ export default function CommentItem({
               onChange={(e) => onEditValueChange(e.target.value)}
               maxLength={MAX_COMMENT_LENGTH}
               aria-label={t('common.edit')}
-              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-800"
+              className="w-full px-3 py-2 border border-border rounded bg-surface"
             />
             <div className="mt-2 flex gap-2 justify-end">
               <button
                 type="button"
                 onClick={onCancelEdit}
-                className="px-3 py-1 text-sm border border-gray-300 dark:border-gray-600 rounded hover:bg-gray-50 dark:hover:bg-gray-700"
+                className="px-3 py-1 text-sm border border-border rounded hover:bg-surface-2"
               >
                 {t('common.cancel')}
               </button>
@@ -105,14 +105,14 @@ export default function CommentItem({
                 type="button"
                 onClick={onSaveEdit}
                 disabled={isSaving || !editValue.trim()}
-                className="px-3 py-1 text-sm bg-teal-600 text-white rounded hover:bg-teal-700 disabled:opacity-50"
+                className="px-3 py-1 text-sm bg-accent text-accent-ink rounded hover:bg-accent-hover disabled:opacity-50"
               >
                 {isSaving ? t('common.loading') : t('common.save')}
               </button>
             </div>
           </div>
         ) : (
-          <p className="text-gray-800 dark:text-gray-200 whitespace-pre-wrap break-words">
+          <p className="text-ink whitespace-pre-wrap break-words">
             {c.body}
           </p>
         )}
@@ -123,7 +123,7 @@ export default function CommentItem({
             disabled={!canInteract}
             aria-label={canInteract ? t('comments.reply') : t('comments.signInToReply')}
             title={!canInteract ? t('comments.signInToReply') : undefined}
-            className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-teal-600 rounded px-1.5 py-0.5 transition-colors disabled:cursor-not-allowed disabled:hover:text-gray-500"
+            className="inline-flex items-center gap-1 text-sm text-muted hover:text-accent rounded px-1.5 py-0.5 transition-colors disabled:cursor-not-allowed disabled:hover:text-muted"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -158,8 +158,8 @@ export default function CommentItem({
           }
           title={!canInteract ? t('comments.signInToLike') : undefined}
           className={`inline-flex flex-col items-center gap-0.5 text-sm rounded px-1.5 py-1 transition-colors ${
-            c.liked_by_me ? 'text-red-500' : 'text-gray-500 hover:text-red-500'
-          } disabled:cursor-not-allowed disabled:hover:text-gray-500`}
+            c.liked_by_me ? 'text-down' : 'text-muted hover:text-down'
+          } disabled:cursor-not-allowed disabled:hover:text-muted`}
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"

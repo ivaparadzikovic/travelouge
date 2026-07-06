@@ -31,7 +31,6 @@ export function useUpdateProfile() {
     },
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: profileKeys.detail(data.id) })
-      toast.success('Profile updated')
     },
     onError: (error) => {
       toast.error(error.message)

@@ -8,7 +8,7 @@ export type PostWithRelations = Tables<'posts'> & {
   categories: Pick<Tables<'categories'>, 'name' | 'slug'> | null
 }
 
-export type PostWithCountryAndCategory = Tables<'posts'> & {
-  countries: Pick<Tables<'countries'>, 'name' | 'code'> | null
-  categories: Pick<Tables<'categories'>, 'name' | 'slug'> | null
-}
+// Same as PostWithRelations minus the author profile (used for a user's own
+// post list, where the author is implied). Derived so the country/category
+// shape can't drift from PostWithRelations.
+export type PostWithCountryAndCategory = Omit<PostWithRelations, 'profiles'>

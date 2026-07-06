@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useNavigate } from 'react-router-dom'
@@ -10,17 +10,16 @@ import { useCategories } from '../../api/categories'
 import { useCreatePost, uploadPostImages } from '../../api/posts'
 import { useDocumentTitle } from '../../utils/useDocumentTitle'
 import Field from '../../components/Field'
-import CountryFlag from '../../components/CountryFlag'
 import ImagePicker from './components/ImagePicker'
 import SelectMenu from './components/SelectMenu'
-import { MAX_IMAGES, imageFileError } from './constants'
+import { useImagePicker } from './hooks/useImagePicker'
+import { useLocalizedOptions } from './hooks/useLocalizedOptions'
 import { postFormSchema } from './form/postFormSchema'
 import type { PostFormValues } from './form/postFormSchema'
-
-const inputClass = 'w-full rounded-lg border border-border bg-surface px-3 py-2 text-ink placeholder:text-muted focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/30'
+import { inputClass } from '../../components/formStyles'
 
 export default function CreatePost() {
-  const { t, i18n } = useTranslation()
+  const { t } = useTranslation()
   useDocumentTitle(t('post.createTitle'))
   const navigate = useNavigate()
   const user = useAuthStore((state) => state.user)
@@ -28,57 +27,14 @@ export default function CreatePost() {
   const { data: categories, isLoading: categoriesLoading } = useCategories()
   const createPost = useCreatePost()
   const [uploading, setUploading] = useState(false)
-  const [imageFiles, setImageFiles] = useState<File[]>([])
+  const { files: imageFiles, previews, addFiles, removeFile } = useImagePicker()
   const [countryId, setCountryId] = useState<number>()
   const [categoryId, setCategoryId] = useState<number>()
   const { register, handleSubmit, setValue, formState: { errors } } = useForm<PostFormValues>({
     resolver: yupResolver(postFormSchema(t)),
   })
 
-  const previews = useMemo(
-    () => imageFiles.map((f) => URL.createObjectURL(f)),
-    [imageFiles],
-  )
-  useEffect(() => {
-    return () => { previews.forEach((url) => URL.revokeObjectURL(url)) }
-  }, [previews])
-
-  const addFiles = (fileList: FileList) => {
-    const files = Array.from(fileList)
-    if (files.length === 0) return
-    const room = MAX_IMAGES - imageFiles.length
-    if (room <= 0) {
-      toast.error(t('post.imageTooMany', { count: MAX_IMAGES }))
-      return
-    }
-    const accepted: File[] = []
-    for (const f of files) {
-      const err = imageFileError(f, t)
-      if (err) {
-        toast.error(err)
-        continue
-      }
-      accepted.push(f)
-    }
-    if (accepted.length > room) {
-      toast.error(t('post.imageTooMany', { count: MAX_IMAGES }))
-    }
-    setImageFiles((prev) => [...prev, ...accepted.slice(0, room)])
-  }
-  const removeFile = (idx: number) =>
-    setImageFiles((prev) => prev.filter((_, i) => i !== idx))
-
-  const collator = new Intl.Collator(i18n.language)
-  const localizedCountries = countries
-    ?.map((c) => ({
-      id: c.id,
-      label: t(`countries.${c.code}`, { defaultValue: c.name }),
-      icon: <CountryFlag code={c.code} />,
-    }))
-    .sort((a, b) => collator.compare(a.label, b.label))
-  const localizedCategories = categories
-    ?.map((c) => ({ id: c.id, label: t(`categories.${c.slug}`, { defaultValue: c.name }) }))
-    .sort((a, b) => collator.compare(a.label, b.label))
+  const { localizedCountries, localizedCategories } = useLocalizedOptions(countries, categories)
 
   const onSubmit = async (data: PostFormValues) => {
     let imageUrls: string[] = []
@@ -178,7 +134,7 @@ export default function CreatePost() {
         <button
           type="submit"
           disabled={submitting}
-          className="w-full rounded-lg bg-accent px-4 py-2 text-sm font-semibold text-white hover:bg-accent-hover transition-colors disabled:opacity-50"
+          className="w-full rounded-lg bg-accent px-4 py-2 text-sm font-semibold text-accent-ink hover:bg-accent-hover transition-colors disabled:opacity-50"
         >
           {uploading ? t('post.uploading') : submitting ? t('common.loading') : t('post.submitLabel')}
         </button>

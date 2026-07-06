@@ -1,8 +1,9 @@
-import { MS_PER_MINUTE, MINUTES_PER_HOUR, HOURS_PER_DAY } from '../constants'
+import { MS_PER_MINUTE, MINUTES_PER_HOUR, HOURS_PER_DAY } from './constants'
 
 // Formats an ISO timestamp as a locale-aware relative time string
-// (e.g. "2 hours ago"), matching the previous inline `timeAgo` helper.
-export function useTimeAgo(iso: string, locale: string): string {
+// (e.g. "2 hours ago"). A plain function, not a hook — it reads Date.now()
+// at call time and holds no React state, so it carries no `use` prefix.
+export function formatTimeAgo(iso: string, locale: string): string {
   const diff = Date.now() - new Date(iso).getTime()
   const minutes = Math.round(diff / MS_PER_MINUTE)
   const rtf = new Intl.RelativeTimeFormat(locale, { numeric: 'auto' })

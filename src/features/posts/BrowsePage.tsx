@@ -6,14 +6,14 @@ import { useBrowsePosts, MIN_SEARCH_LENGTH } from '../../api/posts'
 import { useCountries } from '../../api/countries'
 import { useCategories } from '../../api/categories'
 import { useDocumentTitle } from '../../utils/useDocumentTitle'
-import CountryFlag from '../../components/CountryFlag'
 import PostCard from './components/PostCard'
 import PostCardSkeleton from './components/PostCardSkeleton'
 import SelectMenu from './components/SelectMenu'
 import { SKELETON_PLACEHOLDER_COUNT } from './constants'
+import { useLocalizedOptions } from './hooks/useLocalizedOptions'
 
 export default function Browse() {
-  const { t, i18n } = useTranslation()
+  const { t } = useTranslation()
   useDocumentTitle(t('common.browse'))
   const [searchParams, setSearchParams] = useSearchParams()
 
@@ -62,17 +62,7 @@ export default function Browse() {
     q: urlQuery,
   })
 
-  const collator = new Intl.Collator(i18n.language)
-  const localizedCountries = countries
-    ?.map((c) => ({
-      id: c.id,
-      label: t(`countries.${c.code}`, { defaultValue: c.name }),
-      icon: <CountryFlag code={c.code} />,
-    }))
-    .sort((a, b) => collator.compare(a.label, b.label))
-  const localizedCategories = categories
-    ?.map((c) => ({ id: c.id, label: t(`categories.${c.slug}`, { defaultValue: c.name }) }))
-    .sort((a, b) => collator.compare(a.label, b.label))
+  const { localizedCountries, localizedCategories } = useLocalizedOptions(countries, categories)
 
   return (
     <div>

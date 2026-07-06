@@ -9,8 +9,7 @@ import { useDocumentTitle } from '../../utils/useDocumentTitle'
 import Field from '../../components/Field'
 import { forgotPasswordFormSchema } from './form/forgotPasswordFormSchema'
 import type { ForgotPasswordFormValues } from './form/forgotPasswordFormSchema'
-
-const inputClass = 'w-full rounded-lg border border-border bg-surface px-3 py-2 text-ink placeholder:text-muted focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/30'
+import { inputClass, submitButtonClass } from '../../components/formStyles'
 
 export default function ForgotPassword() {
   const { t } = useTranslation()
@@ -54,7 +53,7 @@ export default function ForgotPassword() {
           <button
             type="submit"
             disabled={requestReset.isPending}
-            className="w-full rounded-lg bg-accent py-2.5 text-sm font-semibold text-accent-ink hover:bg-accent-hover transition-colors disabled:opacity-50"
+            className={submitButtonClass}
           >
             {requestReset.isPending ? t('common.loading') : t('auth.sendResetLink')}
           </button>

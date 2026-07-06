@@ -15,13 +15,13 @@
     "cancel": "Odustani",
     "delete": "Obriši",
     "edit": "Uredi",
-    "submit": "Pošalji"
+    "toggleTheme": "Promijeni temu",
+    "toggleLanguage": "Promijeni jezik"
   },
   "home": {
     "newest": "Najnovije",
     "popular": "Popularno",
     "top": "Najbolje ocijenjeno",
-    "by": "autor",
     "loadMore": "Učitaj još",
     "popularDestinations": "Popularne destinacije",
     "postsCount_one": "objava",
@@ -47,7 +47,6 @@
     "bodyLabel": "Sadržaj",
     "countryLabel": "Zemlja",
     "categoryLabel": "Kategorija",
-    "imageLabel": "Slika (neobavezno)",
     "selectCountry": "Odaberi zemlju",
     "selectCategory": "Odaberi kategoriju",
     "titleRequired": "Naslov je obavezan",
@@ -62,18 +61,10 @@
     "imageInvalidType": "Slika mora biti JPEG, PNG ili WebP",
     "submitLabel": "Objavi",
     "uploading": "Učitavanje slike...",
-    "chooseImage": "Odaberi sliku",
-    "noImageChosen": "Nije odabrana slika",
     "removeImage": "Ukloni",
-    "replaceImage": "Promijeni",
-    "addImage": "Dodaj sliku",
-    "imageWillBeRemoved": "Slika će biti uklonjena prilikom spremanja",
-    "undo": "Poništi",
-    "createSubtitle": "Podijeli rutu, savjet ili priču s putovanja.",
     "photosLabel": "Fotografije",
     "optional": "neobavezno",
     "dropzoneHint": "Povuci fotografiju ovdje ili odaberi",
-    "dropzoneSubhint": "Nema fotografije? U redu je — objave su prvenstveno tekstualne.",
     "addMorePhotos": "Dodaj još fotografija",
     "imageTooMany": "Možeš dodati najviše {{count}} fotografija",
     "imageLimitReached": "Dosegnut je maksimum od {{count}} fotografija",
@@ -90,6 +81,7 @@
     "confirmPassword": "Potvrdi lozinku",
     "passwordsDontMatch": "Lozinke se ne podudaraju",
     "emailRequired": "Email je obavezan",
+    "emailInvalid": "Unesi ispravnu email adresu",
     "confirmPasswordRequired": "Molimo potvrdite lozinku",
     "passwordRequired": "Lozinka je obavezna",
     "passwordTooShort": "Lozinka mora imati najmanje 8 znakova",
@@ -194,6 +186,7 @@
     "avatarInvalidType": "Slika mora biti JPEG, PNG ili WebP",
     "avatarUpdated": "Profilna slika ažurirana",
     "avatarRemoved": "Profilna slika uklonjena",
+    "profileUpdated": "Profil ažuriran",
     "displayName": "Ime za prikaz",
     "bio": "Biografija",
     "reputation": "Reputacija",
@@ -220,8 +213,7 @@
     }
   },
   "browse": {
-    "allCountries": "Sve zemlje",
-    "allCategories": "Sve kategorije"
+    "allCountries": "Sve zemlje"
   },
   "vote": {
     "upvote": "Glasaj za",
@@ -238,13 +230,11 @@
     "title": "Stranica nije pronađena",
     "goHome": "Idi na početnu"
   },
-  "search": {
-    "resultsFor": "Rezultati za",
-    "minChars": "Upiši barem 2 znaka."
-  },
   "comments": {
     "placeholder": "Napiši komentar...",
     "submit": "Objavi komentar",
+    "added": "Komentar dodan",
+    "deleted": "Komentar obrisan",
     "empty": "Još nema komentara. Budi prvi.",
     "signInPrompt": "kako biste ostavili komentar",
     "bodyRequired": "Komentar ne smije biti prazan",
@@ -260,7 +250,6 @@
     "title": "Obavijesti",
     "empty": "Još nema obavijesti",
     "markAllRead": "Označi sve kao pročitano",
-    "viewAll": "Prikaži sve",
     "upvote": "glasao/la je za tvoju objavu",
     "downvote": "glasao/la je protiv tvoje objave",
     "comment": "komentirao/la je tvoju objavu",

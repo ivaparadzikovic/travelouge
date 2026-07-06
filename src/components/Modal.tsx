@@ -2,17 +2,13 @@ import type { ReactNode, MouseEvent } from 'react'
 import { useEscapeKey } from '../hooks/useEscapeKey'
 
 interface ModalProps {
-  open?: boolean
   onClose: () => void
   children: ReactNode
-  labelledBy?: string
   className?: string
 }
 
-export function Modal({ open = true, onClose, children, labelledBy, className }: ModalProps) {
+export function Modal({ onClose, children, className }: ModalProps) {
   useEscapeKey(onClose)
-
-  if (!open) return null
 
   const stopPropagation = (e: MouseEvent<HTMLDivElement>) => e.stopPropagation()
 
@@ -22,7 +18,6 @@ export function Modal({ open = true, onClose, children, labelledBy, className }:
       onClick={onClose}
       role="dialog"
       aria-modal="true"
-      aria-labelledby={labelledBy}
     >
       <div className={className} onClick={stopPropagation}>
         {children}

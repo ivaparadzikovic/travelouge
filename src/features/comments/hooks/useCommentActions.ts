@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import toast from 'react-hot-toast'
 import { useAuthStore } from '../../../stores/auth'
 import {
   useComments,
@@ -46,7 +47,10 @@ export function useCommentActions(postId: string) {
 
   const handleDelete = (c: CommentWithLikeStatus) => {
     if (confirm(t('comments.deleteConfirm'))) {
-      deleteComment.mutate({ id: c.id, postId })
+      deleteComment.mutate(
+        { id: c.id, postId },
+        { onSuccess: () => toast.success(t('comments.deleted')) },
+      )
     }
   }
 
@@ -60,7 +64,12 @@ export function useCommentActions(postId: string) {
     // so this only ever runs with a signed-in user.
     createComment.mutate(
       { postId, authorId: user!.id, body },
-      { onSuccess },
+      {
+        onSuccess: () => {
+          toast.success(t('comments.added'))
+          onSuccess()
+        },
+      },
     )
   }
 
