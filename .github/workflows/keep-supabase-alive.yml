@@ -1,0 +1,33 @@
+name: Keep Supabase alive
+
+# Supabase pauses free-tier projects after ~7 days with no database activity.
+# This workflow issues a lightweight read against the project every 3 days so the
+# inactivity timer never elapses. It runs on GitHub's servers, so it keeps the
+# project awake even when no one is using the app locally.
+#
+# The key below is the public "publishable" (anon) key — the same one that ships
+# in the browser bundle. It is safe to commit: access is governed by Row Level
+# Security in Postgres, not by keeping this value secret.
+
+on:
+  schedule:
+    - cron: '0 6 */3 * *' # every 3 days at 06:00 UTC
+  workflow_dispatch: {} # allow manual runs from the Actions tab
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping Supabase REST API
+        run: |
+          set -euo pipefail
+          URL="https://ihynhvuwmshvqtoyclti.supabase.co/rest/v1/posts?select=id&limit=1"
+          KEY="sb_publishable_cau7GWa7d52Hoh2CpaNAEw_RfpO_G-u"
+          code=$(curl -s -o /dev/null -w '%{http_code}' "$URL" \
+            -H "apikey: $KEY" \
+            -H "Authorization: Bearer $KEY")
+          echo "Supabase responded with HTTP $code"
+          if [ "$code" != "200" ]; then
+            echo "::error::Unexpected status $code — the project may be paused or the key changed."
+            exit 1
+          fi
