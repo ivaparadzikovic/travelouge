@@ -2,15 +2,6 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
-/* ── Design system: "Travel Platform" · Deep purple ──────────────
-   Deep purple #6A38D1 accent, Space Grotesk / IBM Plex Sans / IBM
-   Plex Mono, boxed surfaces, text-first cards, subtle hover-lift.
-   Tokens are CSS variables that flip under `.dark`; `@theme inline`
-   exposes them as Tailwind utilities (bg-surface, text-ink,
-   text-accent, text-accent-ink, border-border, …) so components no
-   longer need paired `dark:` classes. `--accent-ink` is the readable
-   foreground to place on top of `--accent` (white on the light-mode
-   purple, near-black on the lighter dark-mode purple).             */
 
 @theme inline {
   --font-sans: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;

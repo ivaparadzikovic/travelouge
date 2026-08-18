@@ -36,7 +36,6 @@ export function useLogin() {
     },
     onSuccess: () => {
       toast.success('Logged in successfully')
-      // Return to the guarded route the user was sent to /login from, if any.
       const from = location.state?.from?.pathname ?? '/'
       navigate(from, { replace: true })
     },

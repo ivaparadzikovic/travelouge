@@ -16,15 +16,13 @@ export function useComments(postId: string) {
         .order('created_at', { ascending: true })
 
       if (error) throw error
-      // Embedded-select inference limitation: PostgREST joined select strings
-      // (aliased FKs) are not fully inferred by supabase-js under strict TS.
       const typedComments = comments as unknown as CommentWithAuthor[]
 
       if (!userId || typedComments.length === 0) {
         return typedComments.map((c) => ({ ...c, liked_by_me: false }))
       }
 
-      const { data: likes, error: likesError } = await supabase
+      const { data: likes, error: likesError} = await supabase
         .from('comment_likes')
         .select('comment_id')
         .eq('user_id', userId)

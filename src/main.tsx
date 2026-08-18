@@ -6,7 +6,7 @@ import { queryClient } from './api/queryClient'
 import './index.css'
 import './i18n'
 
-// The app's own HTML shell guarantees this element exists (index.html).
+
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <QueryClientProvider client={queryClient}>

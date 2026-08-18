@@ -8,10 +8,7 @@ import { Modal } from '../../../components/Modal'
 import { usernameSetupFormSchema } from '../form/usernameSetupFormSchema'
 import type { UsernameSetupFormValues } from '../form/usernameSetupFormSchema'
 
-// This modal is a forced onboarding step (no cancel affordance): it has no
-// real dismiss action, so onClose is a no-op — backdrop clicks and Escape
-// have no effect, matching the pre-refactor behavior where no such
-// listeners existed at all.
+
 function noop() {}
 
 interface UsernameSetupModalProps {

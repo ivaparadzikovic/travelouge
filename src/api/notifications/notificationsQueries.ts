@@ -4,9 +4,8 @@ import { useAuthStore } from '../../stores/auth'
 import { notificationKeys } from '../queryKeys'
 import type { NotificationWithRelations } from '../../models'
 
-// How often the bell/list re-poll for new notifications.
 const NOTIFICATIONS_POLL_INTERVAL_MS = 30000
-// Most recent notifications shown in the dropdown.
+
 const NOTIFICATIONS_LIST_LIMIT = 20
 
 export function useNotifications() {
@@ -21,8 +20,6 @@ export function useNotifications() {
         .order('created_at', { ascending: false })
         .limit(NOTIFICATIONS_LIST_LIMIT)
       if (error) throw error
-      // Embedded-select inference limitation: PostgREST joined select strings
-      // (aliased FKs) are not fully inferred by supabase-js under strict TS.
       return data as unknown as NotificationWithRelations[]
     },
     enabled: !!user,

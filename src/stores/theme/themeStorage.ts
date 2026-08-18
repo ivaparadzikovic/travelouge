@@ -14,6 +14,6 @@ export function writeStoredTheme(theme: Theme): void {
   try {
     localStorage.setItem(STORAGE_KEY, theme)
   } catch {
-    // localStorage may be unavailable in private mode
+    
   }
 }

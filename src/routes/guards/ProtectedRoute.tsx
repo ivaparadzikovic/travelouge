@@ -13,7 +13,6 @@ export default function ProtectedRoute({ children }: ProtectedRouteProps) {
   const location = useLocation()
 
   if (loading) return <RouteSuspenseFallback />
-  // Remember where the user was headed so login can send them back there.
   if (!user) return <Navigate to="/login" replace state={{ from: location }} />
 
   return children

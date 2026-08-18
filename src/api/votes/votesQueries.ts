@@ -14,8 +14,6 @@ export function usePostVoters(postId: string, enabled = true) {
         .eq('post_id', postId)
         .order('created_at', { ascending: false })
       if (error) throw error
-      // Embedded-select inference limitation: PostgREST joined select strings
-      // (aliased FKs) are not fully inferred by supabase-js under strict TS.
       const voters = data as unknown as VoterWithProfile[]
       return {
         upvoters: voters.filter((v) => v.value === 1),

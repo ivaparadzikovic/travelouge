@@ -1,14 +1,3 @@
-// Serves an HTML stub with Open Graph meta tags so social crawlers
-// (Facebook, X, WhatsApp, Telegram, LinkedIn, Slack…) can render a
-// preview for a post that lives inside a client-rendered SPA.
-//
-// Deploy:
-//   supabase functions deploy share-post --no-verify-jwt
-//   supabase secrets set APP_URL=https://your-deployed-frontend
-//
-// Usage: GET https://<project-ref>.supabase.co/functions/v1/share-post?id=<post_id>
-// Real browsers are redirected to ${APP_URL}/post/<id>; crawlers read the og:* tags.
-
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
 const SUPABASE_URL = Deno.env.get('SUPABASE_URL')!

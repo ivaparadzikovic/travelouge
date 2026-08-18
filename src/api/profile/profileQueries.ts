@@ -13,8 +13,6 @@ export function useProfile(userId?: string) {
         .eq('id', userId!)
         .single()
       if (error) throw error
-      // Embedded-select inference limitation: PostgREST joined select strings
-      // (aliased FKs) are not fully inferred by supabase-js under strict TS.
       return data as unknown as ProfileWithBadges
     },
     enabled: !!userId,

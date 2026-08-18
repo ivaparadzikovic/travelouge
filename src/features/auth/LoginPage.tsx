@@ -24,10 +24,6 @@ export default function Login() {
   const onSubmit = (data: LoginFormValues) => {
     login.mutate(data, {
       onError: (error) => {
-        // useLogin's mutationFn throws whatever supabase-js rejects with,
-        // which for signInWithPassword/the RPC lookup is always an
-        // AuthError (with an optional `.code`), not the generic `Error`
-        // useMutation's TError defaults to.
         const authError = error as AuthError
         const invalidCredentials =
           authError?.code === 'invalid_credentials' ||

@@ -69,8 +69,6 @@ export function useCreateComment() {
     },
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: commentKeys.byPost(variables.postId) })
-      // postKeys.all subsumes detail + feed lists, so the comment_count shown
-      // on feed cards refreshes too (matches useVote).
       queryClient.invalidateQueries({ queryKey: postKeys.all })
     },
     onError: (error) => {

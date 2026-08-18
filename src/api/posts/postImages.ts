@@ -7,16 +7,12 @@ interface PostImageSource {
   image_url?: string | null
 }
 
-// Normalizes a post row into an ordered list of image URLs, tolerating both the
-// legacy single `image_url` column and the newer `image_urls` array.
 export function postImageList(post: PostImageSource | null | undefined): string[] {
   if (post?.image_urls?.length) return post.image_urls
   if (post?.image_url) return [post.image_url]
   return []
 }
 
-// Uploads several files to the post-images bucket in parallel and returns their
-// public URLs in the same order. Throws on the first upload failure.
 export async function uploadPostImages(files: FileList | File[], userId: string): Promise<string[]> {
   return Promise.all(
     Array.from(files).map(async (file) => {
@@ -31,8 +27,7 @@ export async function uploadPostImages(files: FileList | File[], userId: string)
   )
 }
 
-// Best-effort removal of stored images given their public URLs. Failures are
-// swallowed so a save/delete still succeeds even if cleanup can't complete.
+
 export async function removePostImagesByUrl(urls: string[] | null | undefined): Promise<void> {
   const paths = (urls ?? [])
     .map((u) => u.split(`/${BUCKET}/`)[1])

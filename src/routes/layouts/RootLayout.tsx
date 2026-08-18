@@ -17,9 +17,7 @@ export default function RootLayout() {
       <main className="container mx-auto px-4 py-8">
         <Outlet />
       </main>
-      {/* needsUsername is only truthy once profile has loaded, which requires
-          user.id to have been passed to useProfile — so user is non-null here,
-          though TS can't see that relationship across the two hook calls. */}
+      {}
       {needsUsername && <UsernameSetupModal userId={user!.id} />}
     </div>
   )
