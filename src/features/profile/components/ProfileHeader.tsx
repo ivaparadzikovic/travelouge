@@ -9,13 +9,10 @@ import { ALLOWED_AVATAR_TYPES } from '../constants'
 import { Avatar } from '../../../components/Avatar'
 import Field from '../../../components/Field'
 
-// The full designed badge set, in display order. Earned badges render in their
-// color; the rest are shown locked (grey).
+
 const BADGE_ORDER = ['pencil', 'globe', 'star', 'message-circle', 'award'] as const
 
-// Per-badge circular treatment, values lifted verbatim from the Travel Platform
-// design: tinted circle bg, colored icon, tinted 1px border and a soft colored
-// drop-shadow, with a matching colored label. Keyed by the badge's `icon`.
+
 const BADGE_STYLES: Record<string, { circle: string; label: string }> = {
   pencil: {
     circle: 'border-[#f7c9de] bg-[#fce7f3] text-[#db2777] shadow-[0_5px_12px_-5px_#db277766] dark:border-[#55223a] dark:bg-[#3a1526] dark:text-[#f472b6] dark:shadow-[0_5px_12px_-5px_#f472b666]',
@@ -39,12 +36,11 @@ const BADGE_STYLES: Record<string, { circle: string; label: string }> = {
   },
 }
 
-// Shared recipe for the hover/focus tooltip popovers (position + width appended
-// per use). Inverted surface: dark-on-light flips with theme.
+
 const tooltipPanelClass =
   'pointer-events-none absolute rounded shadow-lg bg-ink text-surface text-xs opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity z-20'
 
-// The exact monochrome badge glyphs from the design, colored via `currentColor`.
+
 function BadgeIcon({ icon }: { icon: string }) {
   switch (icon) {
     case 'pencil':
@@ -112,8 +108,7 @@ export function ProfileHeader({ profile, isOwnProfile, postsCount, countriesCoun
   const { register, handleSubmit, reset } = useForm<ProfileEditFormValues>()
 
   useEffect(() => {
-    // Don't resync while editing: an avatar upload/remove refetches the profile
-    // and would otherwise reset() over the user's unsaved display_name/bio.
+
     if (!editing) {
       reset({
         display_name: profile.display_name || '',
@@ -209,7 +204,7 @@ export function ProfileHeader({ profile, isOwnProfile, postsCount, countriesCoun
         <p className="mb-4 text-[13px] leading-[1.55] text-ink">{profile.bio}</p>
       )}
 
-      {/* Stats — number (display font) + lowercase label, divided, underlined */}
+      {/* Stats: number (display font) + lowercase label, divided, underlined */}
       <div className="mb-5 flex items-center gap-5 border-b border-border pb-4">
         <span
           tabIndex={0}
@@ -240,7 +235,7 @@ export function ProfileHeader({ profile, isOwnProfile, postsCount, countriesCoun
         </span>
       </div>
 
-      {/* Badges — the full designed set; earned in color, locked in grey */}
+      {/* Badges the full designed set; earned in color, locked in grey */}
       <div className="mb-5 flex flex-wrap gap-3.5">
         {BADGE_ORDER.map((icon) => {
           const earned = earnedIcons.has(icon)

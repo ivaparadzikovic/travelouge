@@ -18,7 +18,7 @@ export default function PostCard({ post, showAuthor = true }: PostCardProps) {
   return (
     <li className="group relative flex gap-3.5 rounded-xl border border-accent/60 bg-surface p-4 transition-[transform,box-shadow,border-color,background-color] duration-200 hover:-translate-y-0.5 hover:border-accent hover:bg-accent-soft/50 hover:shadow-[0_14px_30px_-16px_rgba(106,56,209,0.5)] focus-within:ring-2 focus-within:ring-accent dark:border-border dark:hover:bg-surface">
       <div className="min-w-0 flex-1">
-        {/* Meta — category · flag + country · time · inline votes */}
+        {}
         <div className="mb-1.5 flex flex-wrap items-center gap-2 text-xs text-muted">
           {post.categories?.slug && (
             <span className="rounded-full bg-accent-soft px-2 py-0.5 text-[11px] font-medium text-accent">
@@ -72,7 +72,7 @@ export default function PostCard({ post, showAuthor = true }: PostCardProps) {
         </div>
       </div>
 
-      {/* Optional thumbnail — self-contained, no reflow when absent (text-first) */}
+      {}
       {images.length > 0 && (
         <div className="relative h-[88px] w-[88px] flex-shrink-0 self-center">
           <img

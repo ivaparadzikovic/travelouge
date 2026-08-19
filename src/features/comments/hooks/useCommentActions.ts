@@ -59,9 +59,6 @@ export function useCommentActions(postId: string) {
   }
 
   const submitComment = (body: string, onSuccess: () => void) => {
-    // Callers only submit via the compose form, which CommentsSection renders
-    // only when `user` is truthy (see CommentForm's sign-in-prompt branch),
-    // so this only ever runs with a signed-in user.
     createComment.mutate(
       { postId, authorId: user!.id, body },
       {

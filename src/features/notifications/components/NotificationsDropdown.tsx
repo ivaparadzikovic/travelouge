@@ -20,10 +20,6 @@ export default function NotificationsDropdown() {
   const rootRef = useRef<HTMLDivElement | null>(null)
 
   const { data: notifications = [], isLoading } = useNotifications()
-  // useUnreadCount's postgrest count is typed `number | null`; `data = 0`
-  // only substitutes for `undefined` (pre-fetch), so `?? 0` also covers a
-  // `null` count the same way the original JS's implicit null->0 coercion
-  // in `unreadCount > 0` did at runtime.
   const { data: unreadCountData } = useUnreadCount()
   const unreadCount = unreadCountData ?? 0
   const markAsRead = useMarkAsRead()

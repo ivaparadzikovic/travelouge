@@ -1,6 +1,3 @@
-// Compact "time ago" for dense card meta lines: "now", "5m", "3h", "2d", "1w".
-// Posts older than ~5 weeks fall back to a short localized date ("12 Mar").
-// Unit suffixes are kept short and localized for the app's two locales.
 
 interface TimeUnitLabels {
   m: string

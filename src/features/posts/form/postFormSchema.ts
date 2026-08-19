@@ -3,10 +3,7 @@ import type { InferType } from 'yup'
 import type { TFunction } from 'i18next'
 import { TITLE_MIN, TITLE_MAX, BODY_MIN, BODY_MAX } from '../constants'
 
-// Shared title/body field builders so the create form (postFormSchema) and the
-// edit form (usePostEditor, via postTextSchema) validate identically — same
-// trim + length rules, so neither can accept a whitespace-only title the other
-// rejects.
+
 const titleField = (t: TFunction) =>
   yup
     .string()
@@ -23,9 +20,7 @@ const bodyField = (t: TFunction) =>
     .min(BODY_MIN, t('post.bodyTooShort'))
     .max(BODY_MAX, t('post.bodyTooLong'))
 
-// Post images are managed as local component state (see CreatePostPage /
-// usePostEditor) rather than through this schema — validated per-file via
-// `imageFileError` as they're picked, not on submit.
+
 export const postTextSchema = (t: TFunction) =>
   yup.object({
     title: titleField(t),

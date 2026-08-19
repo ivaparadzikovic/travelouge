@@ -7,11 +7,6 @@ type PostImageEditorProps = Pick<
   'existingImages' | 'newFiles' | 'newPreviews' | 'addFiles' | 'removeExisting' | 'removeNewFile'
 >
 
-/**
- * The multi-image pick/preview/remove block for the edit form. Renders the
- * combined ordered list of already-stored image URLs (kept) plus freshly
- * picked local files (pending upload) through the shared `ImagePicker` grid.
- */
 export default function PostImageEditor({
   existingImages,
   newFiles,

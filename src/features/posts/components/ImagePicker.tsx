@@ -15,10 +15,6 @@ interface ImagePickerProps {
   max?: number
 }
 
-// A grid-based multi-image picker used by the create and edit post forms.
-// `images` is the ordered list of currently selected images, each carrying its
-// own preview `src` and `onRemove` handler (they may be already-stored URLs or
-// freshly picked local files — the caller decides). `onAdd` receives a FileList.
 export default function ImagePicker({ images, onAdd, max = MAX_IMAGES }: ImagePickerProps) {
   const { t } = useTranslation()
   const inputRef = useRef<HTMLInputElement>(null)

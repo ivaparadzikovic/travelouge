@@ -1,25 +1,3 @@
-// Hand-written Supabase Database type for Phase 0 tooling.
-//
-// `npx supabase gen types typescript --project-id ihynhvuwmshvqtoyclti` requires
-// an authenticated Supabase CLI session (SUPABASE_ACCESS_TOKEN / `supabase login`),
-// which is not available in this environment, so this file was written by hand
-// from `supabase/migrations/001_*.sql` … `020_*.sql`, cross-checked against the
-// columns and RPCs actually referenced under `src/api/**`.
-//
-// Known drift vs. the tracked migrations (schema exists live but has no matching
-// migration file — discovered via grep of src/api/**):
-//   - `comments.is_edited` / `comments.updated_at`: read/written by
-//     src/api/comments/commentsMutations.js (useUpdateComment) and rendered in
-//     CommentsSection.jsx, but no migration adds these columns to `comments`.
-//   - `popular_destinations(p_limit int)` RPC: called from
-//     src/api/countries/countriesQueries.js (usePopularDestinations), but no
-//     migration defines this function.
-//   - `posts.image_urls` (string[] | null): read/written by
-//     src/api/posts/postImages.ts (postImageList) for the multi-image feature,
-//     but no migration adds this column to `posts`.
-// All are modeled below to match actual app usage; if a future `gen types` run
-// disagrees, trust the live database over this file.
-
 export type Json = string | number | boolean | null | { [key: string]: Json | undefined } | Json[]
 
 export interface Database {
@@ -222,8 +200,7 @@ export interface Database {
           body: string
           created_at: string
           like_count: number
-          // Not present in tracked migrations; live column inferred from app usage
-          // (useUpdateComment / CommentsSection "edited" badge). See file header.
+    
           is_edited: boolean
           updated_at: string
         }
@@ -304,7 +281,7 @@ export interface Database {
         Row: {
           id: string
           user_id: string
-          /** Check constraint: 'upvote' | 'downvote' | 'comment' (was 'vote' | 'comment' pre-013). */
+         
           type: string
           post_id: string
           actor_id: string
@@ -553,7 +530,7 @@ export interface Database {
     }
     Views: { [_ in never]: never }
     Functions: {
-      // RPCs actually called from src/api/** (grepped for `.rpc(`).
+     
       increment_post_view: {
         Args: { p_post_id: string }
         Returns: undefined
@@ -562,8 +539,7 @@ export interface Database {
         Args: { p_username: string }
         Returns: string | null
       }
-      // Not present in tracked migrations; live function inferred from app usage
-      // (src/api/countries/countriesQueries.js). See file header.
+   
       popular_destinations: {
         Args: { p_limit: number }
         Returns: {

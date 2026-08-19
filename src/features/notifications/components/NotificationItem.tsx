@@ -8,8 +8,7 @@ interface NotificationItemProps {
   onSelect: (notification: NotificationWithRelations) => void
 }
 
-// A single notification row: actor avatar, actor name + action text,
-// post title, relative time, and the unread dot.
+
 export function NotificationItem({ notification: n, onSelect }: NotificationItemProps) {
   const { t, i18n } = useTranslation()
   const actor = n.profiles

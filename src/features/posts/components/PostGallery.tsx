@@ -7,9 +7,7 @@ interface PostGalleryProps {
   alt?: string
 }
 
-// Renders a post's images. A single image shows at its natural aspect ratio
-// (so tall/vertical photos aren't cropped); multiple images form a responsive
-// grid of square tiles that open a full-size lightbox on click.
+
 export default function PostGallery({ images, alt = '' }: PostGalleryProps) {
   const { t } = useTranslation()
   const [openAt, setOpenAt] = useState<number | null>(null)

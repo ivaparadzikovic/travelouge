@@ -7,7 +7,6 @@ interface NotificationBellProps {
   onToggle: () => void
 }
 
-// Trigger button + unread badge for the notifications dropdown.
 export function NotificationBell({ open, unreadCount, onToggle }: NotificationBellProps) {
   const { t } = useTranslation()
 

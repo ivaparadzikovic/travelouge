@@ -3,12 +3,7 @@ import { useTranslation } from 'react-i18next'
 import toast from 'react-hot-toast'
 import { MAX_IMAGES, imageFileError } from '../constants'
 
-/**
- * The "pick images" machinery shared by the create and edit post forms: the
- * File[] state, object-URL previews (revoked on change), and add/remove
- * handlers enforcing MAX_IMAGES + per-file validation. `existingCount` lets the
- * edit form reserve room for already-stored images that aren't in this state.
- */
+
 export function useImagePicker(existingCount = 0) {
   const { t } = useTranslation()
   const [files, setFiles] = useState<File[]>([])

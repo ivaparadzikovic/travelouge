@@ -36,9 +36,10 @@ export default function Login() {
   }
 
   return (
-    <div className="mx-auto mt-10 max-w-sm">
-      <div className="rounded-2xl border border-border bg-surface p-6 shadow-[0_10px_30px_-18px_rgba(20,24,44,0.35)]">
-        <div className="mb-1 text-center font-display text-base font-bold text-accent">
+    <div   className="mx-auto mt-6 w-full"
+           style={{ maxWidth: '520px' }}>
+      <div className="rounded-2xl border border-border bg-surface p-8 shadow-[0_10px_30px_-18px_rgba(20,24,44,0.35)]"  style={{ padding: '32px' }}>
+        <div className="mb-1 text-center font-display text-[22px] font-bold text-accent">
           {t('common.appName')}
         </div>
         <h1 className="mb-5 text-center font-display text-xl font-bold text-ink">

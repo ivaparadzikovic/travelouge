@@ -28,12 +28,13 @@ export default function Register() {
   }
 
   return (
-    <div className="mx-auto mt-10 max-w-sm">
-      <div className="rounded-2xl border border-border bg-surface p-6 shadow-[0_10px_30px_-18px_rgba(20,24,44,0.35)]">
-        <div className="mb-1 text-center font-display text-base font-bold text-accent">
+    <div className="mx-auto mt-6 w-full"
+        style={{ maxWidth: '520px', marginLeft: 'auto',  marginRight: 'auto', }}>
+      <div className="rounded-2xl border border-border bg-surface p-8 shadow-[0_10px_30px_-18px_rgba(20,24,44,0.35)]"   style={{ padding: '32px' }}>
+        <div className="mb-1 text-center font-display text-[22px] font-bold text-accent"  style={{ fontSize: '22px', textAlign: 'center', width: '100%' }}>
           {t('common.appName')}
         </div>
-        <h1 className="mb-5 text-center font-display text-xl font-bold text-ink">
+        <h1 className="mb-5 text-center font-display text-xl font-bold text-ink"   style={{ textAlign: 'center', width: '100%' }}>
           {t('auth.registerTitle')}
         </h1>
 

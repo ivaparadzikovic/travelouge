@@ -1,11 +1,8 @@
 interface AvatarProps {
   url?: string | null
   name?: string | null
-  /** Tailwind size classes, e.g. "w-7 h-7". Defaults to "w-8 h-8". */
   size?: string
-  /** Font-size class for the initials fallback. Defaults to "text-xs". */
   initialsClassName?: string
-  /** Extra classes appended to both the image and initials variants. */
   className?: string
 }
 

@@ -6,8 +6,6 @@ import type { PostWithRelations } from '../../models'
 const POSTS_PER_PAGE = 10
 const POST_SELECT = '*, profiles:author_id(username, display_name, avatar_url), countries(name, code), categories(name, slug)'
 
-// Shortest search query useBrowsePosts will actually filter on; shorter
-// input returns the unfiltered list instead of running an ilike search.
 export const MIN_SEARCH_LENGTH = 2
 
 export function usePosts(sort = 'newest') {
@@ -31,12 +29,10 @@ export function usePosts(sort = 'newest') {
 
       const { data, error } = await query.range(from, to)
       if (error) throw error
-      // Embedded-select inference limitation: PostgREST joined select strings
-      // (aliased FKs) are not fully inferred by supabase-js under strict TS.
+    
       return (data ?? []) as PostWithRelations[]
     },
-    // Required by TanStack Query v5's useInfiniteQuery types; value matches
-    // the `pageParam = 0` default the original JS relied on implicitly.
+
     initialPageParam: 0,
     getNextPageParam: (lastPage, allPages) => {
       return lastPage.length === POSTS_PER_PAGE ? allPages.length : undefined
@@ -54,7 +50,7 @@ export function usePost(id?: string) {
         .eq('id', id!)
         .single()
       if (error) throw error
-      // Embedded-select inference limitation: see usePosts above.
+    
       return data as unknown as PostWithRelations
     },
     enabled: !!id,
@@ -71,7 +67,7 @@ export function useUserPosts(userId?: string) {
         .eq('author_id', userId!)
         .order('created_at', { ascending: false })
       if (error) throw error
-      // Embedded-select inference limitation: see usePosts above.
+      
       return (data ?? []) as unknown as PostWithRelations[]
     },
     enabled: !!userId,
@@ -88,16 +84,13 @@ export function useBrowsePosts({ countryId, categoryId, q }: BrowsePostsFilters)
       if (countryId) req = req.eq('country_id', countryId)
       if (categoryId) req = req.eq('category_id', categoryId)
       if (search.length >= MIN_SEARCH_LENGTH) {
-        // Strip PostgREST or() grammar chars: % and , (list/wildcard) plus
-        // ( ) group delimiters and \ escape, so a query like "europe (2024)"
-        // can't close the or-group early and 400 the request.
+   
         const safe = search.replace(/[%,()\\]/g, '')
         req = req.or(`title.ilike.%${safe}%,body.ilike.%${safe}%`)
       }
 
       const { data, error } = await req.order('created_at', { ascending: false })
       if (error) throw error
-      // Embedded-select inference limitation: see usePosts above.
       return (data ?? []) as PostWithRelations[]
     },
   })

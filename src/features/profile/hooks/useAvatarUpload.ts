@@ -5,12 +5,7 @@ import toast from 'react-hot-toast'
 import { useUploadAvatar, useRemoveAvatar } from '../../../api/profile'
 import { MAX_AVATAR_BYTES, ALLOWED_AVATAR_TYPES } from '../constants'
 
-/**
- * Owns the avatar file-pick/validation/upload/remove lifecycle: the hidden
- * file input ref, the upload/remove mutations, and their handlers. Moved
- * verbatim out of ProfilePage — every guard/branch/side effect here matches
- * the original inline implementation.
- */
+
 export function useAvatarUpload(id: string, avatarUrl: string | null | undefined) {
   const { t } = useTranslation()
   const uploadAvatar = useUploadAvatar()

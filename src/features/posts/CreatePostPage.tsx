@@ -42,12 +42,9 @@ export default function CreatePost() {
     if (imageFiles.length > 0) {
       try {
         setUploading(true)
-        // CreatePostPage is only reachable via ProtectedRoute, so user is
-        // always non-null here.
         imageUrls = await uploadPostImages(imageFiles, user!.id)
       } catch (err) {
-        // Storage errors thrown above are always Error instances (supabase-js
-        // StorageError extends Error).
+
         toast.error((err as Error).message)
         setUploading(false)
         return
@@ -115,7 +112,7 @@ export default function CreatePost() {
           </Field>
         </div>
 
-        {/* Photos — optional, text-first */}
+        {/* Photos optional, text-first */}
         <div>
           <div className="mb-1.5 text-sm font-medium text-ink">
             {t('post.photosLabel')}{' '}

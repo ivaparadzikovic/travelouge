@@ -20,15 +20,7 @@ interface SelectMenuProps {
   id?: string
 }
 
-/**
- * Accessible custom dropdown used across the post forms/filters. Unlike a native
- * <select>, it lets each option carry a leading `icon` node (e.g. a country flag)
- * and gives full control over the hover styling (purple, matching the app accent)
- * instead of the browser's default blue option highlight. Drives a plain
- * value/onChange contract so it can be wired to react-hook-form via setValue.
- *
- * Options: `{ id, label, icon? }`.
- */
+
 export default function SelectMenu({
   options = [],
   value,

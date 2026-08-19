@@ -36,7 +36,7 @@ export default function Navbar() {
         <div className="flex items-baseline gap-6">
           <Link
             to="/"
-            className="font-display text-base font-bold leading-none tracking-tight text-accent"
+            className="font-display text-[22px] font-bold leading-none tracking-tight text-accent"
           >
             {t('common.appName')}
           </Link>

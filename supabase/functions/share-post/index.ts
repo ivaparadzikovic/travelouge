@@ -48,7 +48,7 @@ Deno.serve(async (req) => {
   if (error || !post) return notFound('Post not found')
 
   const destination = `${APP_URL}/post/${post.id}`
-  const title = escapeHtml(post.title ?? 'Putna Platforma')
+  const title = escapeHtml(post.title ?? 'Travelouge')
   const description = escapeHtml(truncate(post.body ?? '', 200))
   const author = post.profiles?.username ? escapeHtml(post.profiles.username) : ''
   const image = post.image_url ? escapeHtml(post.image_url) : ''
@@ -63,7 +63,7 @@ Deno.serve(async (req) => {
     <meta name="description" content="${description}" />
 
     <meta property="og:type" content="article" />
-    <meta property="og:site_name" content="Putna Platforma" />
+    <meta property="og:site_name" content="Travelouge" />
     <meta property="og:title" content="${title}" />
     <meta property="og:description" content="${description}" />
     <meta property="og:url" content="${safeDestination}" />

@@ -69,9 +69,7 @@ export default function ShareButton({ url, shareUrl, title }: ShareButtonProps) 
     if (open) setOpen(false)
   })
 
-  // Crawler-targeted networks (FB/X/WhatsApp/Telegram) unfurl previews
-  // server-side, so they must point at the OG-tagged share endpoint when
-  // available. Copy-link and native share give users the direct URL.
+ 
   const unfurlUrl = shareUrl ?? url
   const encodedUrl = encodeURIComponent(unfurlUrl)
   const encodedText = encodeURIComponent(title)
@@ -121,7 +119,7 @@ export default function ShareButton({ url, shareUrl, title }: ShareButtonProps) 
     try {
       await navigator.share({ title, url })
     } catch {
-      // User cancelled or share unavailable; nothing to do.
+      
     }
     setOpen(false)
   }
